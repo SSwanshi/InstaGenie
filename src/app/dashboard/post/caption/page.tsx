@@ -145,7 +145,7 @@ export default function PostCaptionPage() {
                 </div>
               </div>
 
-              {/* Text Input */}
+              
               <div className="space-y-4">
                 <label className="flex items-center gap-2 text-lg font-semibold text-gray-200">
                   <FileText className="w-5 h-5" />
