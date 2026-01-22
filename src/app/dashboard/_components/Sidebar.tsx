@@ -17,7 +17,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
     { name: "Post Generator", href: "/dashboard/post", icon: FileText },
     { name: "Story Generator", href: "/dashboard/story", icon: Film },
     { name: "Reel Generator", href: "/dashboard/reel", icon: Video },
-    { name: "Profile", href: "/user", icon: User },
+    { name: "Profile", href: "/dashboard/user", icon: User },
   ];
 
   const linkClass = (href: string) =>
