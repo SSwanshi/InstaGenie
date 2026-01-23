@@ -9,14 +9,14 @@ interface DashboardNavbarProps {
   setMobileMenuOpen: (open: boolean) => void;
 }
 
-export default function DashboardNavbar({ 
-  isMobileMenuOpen, 
-  setMobileMenuOpen 
+export default function DashboardNavbar({
+  isMobileMenuOpen,
+  setMobileMenuOpen
 }: DashboardNavbarProps) {
   return (
     <nav className="fixed top-0 left-0 right-0 z-[60] bg-white/90 dark:bg-gray-800/90 border-b border-gray-200/50 dark:border-gray-700/50 shadow-xl shadow-gray-900/10 backdrop-blur-xl supports-[backdrop-filter]:bg-white/85 dark:supports-[backdrop-filter]:bg-gray-800/85">
       <div className="flex items-center justify-between px-4 py-3">
-        
+
         {/* Left side - Brand (with sidebar spacing on desktop) */}
         <div className="flex items-center">
           <Link
@@ -29,7 +29,7 @@ export default function DashboardNavbar({
 
         {/* Right side - User actions */}
         <div className="flex items-center gap-3">
-          
+
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
@@ -46,7 +46,7 @@ export default function DashboardNavbar({
 
           {/* User Profile */}
           <div className="flex items-center">
-            <UserButton 
+            <UserButton
               appearance={{
                 elements: {
                   avatarBox: "w-8 h-8 rounded-full border-2 border-cyan-500/40 hover:border-cyan-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/25",

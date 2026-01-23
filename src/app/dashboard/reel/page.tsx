@@ -33,7 +33,7 @@ export default async function StoryPage() {
     {
       title: "Description",
       description: "Craft a compelling description that teases the value, emotion, or surprise in your reel hook your viewers before they hit play!",
-      icon: <Text className="w-8 h-8"/>,
+      icon: <Text className="w-8 h-8" />,
       features: ["Quick Captions", "Story Hooks", "Question Starters", "Engagement Drivers"],
       gradient: "from-pink-500 to-rose-600",
       glowColor: "pink-500/20",
@@ -59,7 +59,7 @@ export default async function StoryPage() {
           <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-r from-rose-500/15 to-cyan-500/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-56 h-56 bg-gradient-to-r from-purple-500/25 to-pink-500/25 rounded-full blur-2xl animate-pulse delay-500"></div>
-          
+
           {/* Grid Pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{
@@ -80,7 +80,7 @@ export default async function StoryPage() {
                 </div>
               </div>
             </div>
-            
+
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white via-pink-200 to-purple-200 bg-clip-text text-transparent mb-6 tracking-tight">
               Reel Creator
             </h1>
@@ -115,7 +115,7 @@ export default async function StoryPage() {
                 {/* Glow Effect */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
                 <div className={`absolute -top-2 -left-2 w-32 h-32 bg-${feature.glowColor} rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-                
+
                 {/* Icon */}
                 <div className="relative mb-6">
                   <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.gradient} text-white group-hover:scale-110 transition-transform duration-300 shadow-lg`}>

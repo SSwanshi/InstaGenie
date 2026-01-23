@@ -3,6 +3,7 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import Link from "next/link";
+import Scene3D from '@/components/Scene3D';
 import React, { useState, useEffect } from 'react';
 
 const ModernLandingPage = () => {
@@ -18,7 +19,7 @@ const ModernLandingPage = () => {
 
     return () => clearInterval(interval);
   }, []);
-  
+
 
   const features = [
     {
@@ -51,13 +52,21 @@ const ModernLandingPage = () => {
   ];
 
   return (
-    <div className="dark min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="dark min-h-screen relative overflow-hidden bg-black">
+
       {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-purple-600/10 to-indigo-600/10 rounded-full blur-3xl animate-spin [animation-duration:20s]"></div>
-      </div>
+      {/* Purple Glow Accents */}
+<div className="absolute inset-0 pointer-events-none">
+  {/* Top-left glow */}
+  <div className="absolute -top-48 -left-48 w-[700px] h-[700px] bg-purple-700/30 rounded-full blur-[180px]" />
+
+  {/* Right-side glow */}
+  <div className="absolute top-1/4 right-[-300px] w-[900px] h-[900px] bg-indigo-600/25 rounded-full blur-[220px]" />
+
+  {/* Bottom glow */}
+  <div className="absolute bottom-[-350px] left-1/3 w-[900px] h-[900px] bg-fuchsia-700/20 rounded-full blur-[260px]" />
+</div>
+
 
       {/* Grid Pattern Overlay */}
       <div className="absolute inset-0 opacity-5">
@@ -66,53 +75,53 @@ const ModernLandingPage = () => {
       </div>
 
       {/* Hero Section */}
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center pt-20">
-        {/* Badge */}
-        <div className={`inline-flex items-center px-4 py-2 mb-8 bg-white/10 backdrop-blur-lg rounded-full border border-white/20 shadow-lg transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-          <span className="text-sm text-white/90 font-medium">Your social media helper</span>
+      <main className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-150px)]">
+          {/* Left Content */}
+          <div className="flex flex-col items-start text-left z-20">
+            
+
+            {/* Main Heading with Staggered Animation */}
+            <div className="mb-6">
+              <h1 className={`mt-[-90px] text-6xl md:text-7xl lg:text-7xl font-bold leading-tight transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+                <span className="block text-white mb-2">Let AI Handle</span>
+              </h1>
+              <h1 className={`text-6xl md:text-7xl lg:text-7xl font-bold leading-tight transition-all duration-1000 delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+                <span className="block bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
+                  The Aesthetic
+                </span>
+              </h1>
+            </div>
+
+            {/* Subtitle */}
+            <p className={`text-xl text-white/80 max-w-xl mb-12 leading-relaxed transition-all duration-1000 delay-1100 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              InstaGenie&apos;s got your back. Get badass AI-powered captions, hashtags, and music to make your posts look premium.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className={`flex flex-col sm:flex-row gap-4 mb-8 transition-all duration-1000 delay-1300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <Link
+                href="/dashboard"
+                className="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-2xl hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-indigo-500/25 hover:scale-105 transform"
+              >
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  Start for Free
+                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Content: 3D Model */}
+          <div className={`relative w-full h-[500px] lg:h-[700px] transition-all duration-1000 delay-1000 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+            <Scene3D />
+          </div>
         </div>
 
-        {/* Main Heading with Staggered Animation */}
-        <div className="mb-6">
-          <h1 className={`text-6xl md:text-7xl lg:text-7xl font-bold leading-tight transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <span className="block text-white mb-2">Let AI Handle the</span>
-          </h1>
-          <h1 className={`text-6xl md:text-7xl lg:text-7xl font-bold leading-tight transition-all duration-1000 delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <span className="block bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
-              Aesthetic
-            </span>
-          </h1>
-          <h1 className={`text-4xl md:text-5xl lg:text-5xl font-bold leading-tight transition-all duration-1000 delay-900 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <span className="block text-white/90 mt-4">
-              So You Don&apos;t Have To
-            </span>
-          </h1>
-        </div>
-
-        {/* Subtitle */}
-        <p className={`text-xl md:text-2xl text-white/80 max-w-4xl mb-12 leading-relaxed transition-all duration-1000 delay-1100 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          InstaGenie&apos;s got your back, bro—no more staring at your screen like it owes you a caption. Get badass AI-powered captions, hashtags, music, and more to make your posts, reels, and stories look like you actually know what you&apos;re doing.
-        </p>
-
-        {/* CTA Buttons */}
-        <div className={`flex flex-col sm:flex-row gap-4 mb-16 transition-all duration-1000 delay-1300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <Link
-            href="/dashboard"
-            className="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-2xl hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-indigo-500/25 hover:scale-105 transform"
-          >
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              Start for Free
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </span>
-          </Link>
-
-        </div>
-
-        {/* Interactive Feature Showcase */}
-        <div className={`max-w-6xl w-full transition-all duration-1000 delay-1500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+        {/* Interactive Feature Showcase - Moved below */}
+        <div className={`max-w-6xl w-full mx-auto mt-20 mb-20 transition-all duration-1000 delay-1500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
           <div className="relative">
             {/* Feature Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -124,8 +133,8 @@ const ModernLandingPage = () => {
                   onClick={() => setCurrentFeature(index)}
                 >
                   <div className={`w-16 h-16 bg-gradient-to-r ${index === 0 ? 'from-indigo-500 to-purple-500' :
-                      index === 1 ? 'from-purple-500 to-pink-500' :
-                        'from-pink-500 to-rose-500'
+                    index === 1 ? 'from-purple-500 to-pink-500' :
+                      'from-pink-500 to-rose-500'
                     } rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     {feature.icon}
                   </div>
@@ -162,13 +171,6 @@ const ModernLandingPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
             </button>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce transition-all duration-1000 delay-1800 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
           </div>
         </div>
       </main>

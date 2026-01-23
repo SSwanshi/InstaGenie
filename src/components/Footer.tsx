@@ -19,7 +19,7 @@ export default function Footer() {
                         <p className="text-gray-400 mb-6 text-base leading-relaxed">
                             Supercharge your Instagram content with AI-powered captions, hashtags, and creative tools designed for modern creators. Transform your social media presence with intelligent automation and boost your engagement with cutting-edge technology.
                         </p>
-                        
+
                         {/* Social Links - Mobile positioned here */}
                         <div className="flex space-x-4 lg:hidden">
                             <a href="https://sarvjeet-swanshi.vercel.app/" className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-600/20 transition-all duration-300 border border-white/10 hover:border-indigo-500/50">
@@ -51,7 +51,7 @@ export default function Footer() {
                     {/* Quick Links Section - Right side */}
                     <div className="lg:col-span-1">
                         <h4 className="text-lg font-semibold text-white mb-4">Social Links</h4>
-                        
+
                         {/* Social Links - Desktop positioned here */}
                         <div className="hidden lg:flex space-x-3 mt-6">
                             <a href="https://sarvjeet-swanshi.vercel.app/" className="w-9 h-9 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-600/20 transition-all duration-300 border border-white/10 hover:border-indigo-500/50">

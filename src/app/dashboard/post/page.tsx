@@ -2,7 +2,7 @@
 import { FileText, Music, Hash, ArrowRight, Sparkles, TrendingUp, Target, Zap, Brain, PenTool, ArrowDown } from "lucide-react";
 
 export default async function PostPage() {
-  
+
 
   const postFeatures = [
     {
@@ -46,7 +46,7 @@ export default async function PostPage() {
           <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-r from-indigo-500/15 to-cyan-500/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-56 h-56 bg-gradient-to-r from-purple-500/25 to-pink-500/25 rounded-full blur-2xl animate-pulse delay-500"></div>
-          
+
           {/* Grid Pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{
@@ -67,7 +67,7 @@ export default async function PostPage() {
                 </div>
               </div>
             </div>
-            
+
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent mb-6 tracking-tight">
               Post Creator
             </h1>
@@ -76,7 +76,7 @@ export default async function PostPage() {
             </p>
           </div>
 
-                    <div className="mt-12">
+          <div className="mt-12">
             <button className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-semibold text-lg shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105 transition-all duration-300">
               <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur opacity-75 group-hover:opacity-100 transition-opacity duration-300"></span>
               <span className="relative flex items-center">
@@ -87,7 +87,7 @@ export default async function PostPage() {
           </div>
         </div>
 
-        
+
       </div>
 
       {/* Main Content */}
@@ -114,7 +114,7 @@ export default async function PostPage() {
                 {/* Glow Effect */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
                 <div className={`absolute -top-2 -left-2 w-32 h-32 bg-${feature.glowColor} rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-                
+
                 {/* Icon */}
                 <div className="relative mb-6">
                   <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.gradient} text-white group-hover:scale-110 transition-transform duration-300 shadow-lg`}>

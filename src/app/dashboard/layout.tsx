@@ -37,18 +37,18 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex flex-col">
       {/* Dashboard Navbar */}
-      <DashboardNavbar 
+      <DashboardNavbar
         isMobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
       />
 
       {/* Main Content Area */}
       <div className="flex flex-1 pt-16"> {/* pt-16 accounts for fixed navbar */}
-        <Sidebar 
+        <Sidebar
           mobileOpen={mobileMenuOpen}
           setMobileOpen={setMobileMenuOpen}
         />
-        
+
         <main className="flex-1 min-h-[calc(100vh-4rem)]">
           {children}
         </main>

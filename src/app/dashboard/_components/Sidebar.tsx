@@ -21,10 +21,9 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
   ];
 
   const linkClass = (href: string) =>
-    `group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ease-in-out ${
-      pathname === href
-        ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-400 shadow-lg border border-indigo-500/30"
-        : "hover:bg-gradient-to-r hover:from-gray-700/30 hover:to-gray-600/30 text-gray-300 hover:text-white hover:shadow-md"
+    `group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ease-in-out ${pathname === href
+      ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-400 shadow-lg border border-indigo-500/30"
+      : "hover:bg-gradient-to-r hover:from-gray-700/30 hover:to-gray-600/30 text-gray-300 hover:text-white hover:shadow-md"
     }`;
 
   return (
@@ -57,11 +56,10 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
 
       {/* Mobile Sidebar Drawer */}
       <div
-        className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] z-[70] lg:hidden transform transition-transform duration-300 ease-in-out border-r border-gray-800/50 ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full w-80 bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] z-[70] lg:hidden transform transition-transform duration-300 ease-in-out border-r border-gray-800/50 ${mobileOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
-        <div className="p-6 pt-20"> 
+        <div className="p-6 pt-20">
           {/* Mobile Header */}
           <div className="mb-8">
             <div>
@@ -71,7 +69,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
               <p className="text-gray-400 text-sm mt-1">Choose a service</p>
             </div>
           </div>
-          
+
           {/* Mobile Navigation */}
           <nav className="space-y-2">
             {navItems.map((item) => {
