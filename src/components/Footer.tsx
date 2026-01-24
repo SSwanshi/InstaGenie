@@ -13,7 +13,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
                     {/* Brand Section - Takes more space */}
                     <div className="lg:col-span-3">
-                        <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-4">
+                        <h3 className="instagenie-logo text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-4">
                             InstaGenie
                         </h3>
                         <p className="text-gray-400 mb-6 text-base leading-relaxed">

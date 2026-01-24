@@ -1,18 +1,20 @@
 "use client";
-import Sidebar from "./_components/Sidebar";
+
+import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+
+import Sidebar from "./_components/Sidebar";
 import DashboardNavbar from "./_components/Dashboard_navbar";
 import DashboardFooter from "./_components/Dashboard_footer";
-import { useState, useEffect } from "react";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { userId, isLoaded } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (isLoaded && !userId) {
@@ -20,42 +22,57 @@ export default function DashboardLayout({
     }
   }, [isLoaded, userId]);
 
-  // Show loading state while auth is being checked
+  /* -------------------- Loading State -------------------- */
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="relative">
+          <div className="w-12 h-12 rounded-full border-2 border-white/20" />
+          <div className="absolute inset-0 w-12 h-12 rounded-full border-2 border-sky-400 border-t-transparent animate-spin" />
+        </div>
       </div>
     );
   }
 
-  // Don't render anything if user is not authenticated
-  if (!userId) {
-    return null;
-  }
+  /* -------------------- Not Authenticated -------------------- */
+  if (!userId) return null;
 
+  /* -------------------- Layout -------------------- */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex flex-col">
-      {/* Dashboard Navbar */}
+    <div className="min-h-screen flex flex-col bg-[#030014] text-white selection:bg-purple-500/30 overflow-x-hidden">
+      {/* Background Glows */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/20 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-900/20 blur-[120px] animate-pulse delay-700" />
+      </div>
+
+      {/* Navbar */}
       <DashboardNavbar
         isMobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
       />
 
-      {/* Main Content Area */}
-      <div className="flex flex-1 pt-16"> {/* pt-16 accounts for fixed navbar */}
+      {/* Content */}
+      <div className="flex flex-1 pt-16 relative z-10">
+
+        {/* Sidebar */}
         <Sidebar
           mobileOpen={mobileMenuOpen}
           setMobileOpen={setMobileMenuOpen}
         />
 
-        <main className="flex-1 min-h-[calc(100vh-4rem)]">
-          {children}
+        {/* Main */}
+        <main className="flex-1 min-h-[calc(100vh-4rem)] flex flex-col bg-transparent backdrop-blur-[2px]">
+          <div className="flex-1">
+            {children}
+          </div>
+          {/* Footer inside main to respect sidebar layout */}
+          <div className="w-full mt-[20px]">
+            <DashboardFooter />
+          </div>
+
         </main>
       </div>
-
-      {/* Dashboard Footer */}
-      <DashboardFooter />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Link from "next/link";
 import Scene3D from '@/components/Scene3D';
 import React, { useState, useEffect } from 'react';
 
+
 const ModernLandingPage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentFeature, setCurrentFeature] = useState(0);
@@ -24,9 +25,21 @@ const ModernLandingPage = () => {
   const features = [
     {
       icon: (
-        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
+        <svg
+  className="w-8 h-8"
+  fill="none"
+  viewBox="0 0 24 24"
+>
+  <path
+    stroke="white"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    d="M8 10h8M8 14h6m-2 6l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+  />
+</svg>
+
+
       ),
       title: "AI Captions",
       description: "Generate engaging captions that match your brand voice and audience"
@@ -51,21 +64,26 @@ const ModernLandingPage = () => {
     }
   ];
 
+  const mailing = () => {
+    window.location.href = "mailto:sarvjeetswanshi25@gmail.com";
+  };
+
+
   return (
     <div className="dark min-h-screen relative overflow-hidden bg-black">
 
       {/* Animated Background Elements */}
       {/* Purple Glow Accents */}
-<div className="absolute inset-0 pointer-events-none">
-  {/* Top-left glow */}
-  <div className="absolute -top-48 -left-48 w-[700px] h-[700px] bg-purple-700/30 rounded-full blur-[180px]" />
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Top-left glow */}
+        <div className="absolute -top-48 -left-48 w-[700px] h-[700px] bg-purple-700/30 rounded-full blur-[180px]" />
 
-  {/* Right-side glow */}
-  <div className="absolute top-1/4 right-[-300px] w-[900px] h-[900px] bg-indigo-600/25 rounded-full blur-[220px]" />
+        {/* Right-side glow */}
+        <div className="absolute top-1/4 right-[-300px] w-[900px] h-[900px] bg-indigo-600/25 rounded-full blur-[220px]" />
 
-  {/* Bottom glow */}
-  <div className="absolute bottom-[-350px] left-1/3 w-[900px] h-[900px] bg-fuchsia-700/20 rounded-full blur-[260px]" />
-</div>
+        {/* Bottom glow */}
+        <div className="absolute bottom-[-350px] left-1/3 w-[900px] h-[900px] bg-fuchsia-700/20 rounded-full blur-[260px]" />
+      </div>
 
 
       {/* Grid Pattern Overlay */}
@@ -79,7 +97,7 @@ const ModernLandingPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-150px)]">
           {/* Left Content */}
           <div className="flex flex-col items-start text-left z-20">
-            
+
 
             {/* Main Heading with Staggered Animation */}
             <div className="mb-6">
@@ -161,15 +179,21 @@ const ModernLandingPage = () => {
         {/* Floating Action Elements */}
         <div className="fixed bottom-8 right-8 z-50">
           <div className={`flex flex-col space-y-4 transition-all duration-1000 delay-2000 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
-            <button className="w-14 h-14 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 group">
-              <svg className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            <button onClick={() => mailing()} className="w-14 h-14 bg-white/10 backdrop-blur-lg rounded-full flex items-center justify-center border border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300 group">
+              <svg
+                className="w-6 h-6 text-white group-hover:scale-110 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M3 8l9 6 9-6M4 6h16a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1z"
+                />
               </svg>
-            </button>
-            <button className="w-14 h-14 bg-white/10 backdrop-blur-lg rounded-full flex items-center justify-center border border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300 group">
-              <svg className="w-6 h-6 text-white group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
+
             </button>
           </div>
         </div>
