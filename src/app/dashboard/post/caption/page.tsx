@@ -6,7 +6,7 @@ import { Upload, Image as ImageIcon, Sparkles, Copy, Check, Wand2, FileText, Pal
 
 const tones = [
   { name: "Witty", icon: Sparkles },
-  { name: "Emotional", icon: FileText },
+  { name: "Emotional", icon: FileText }, 
   { name: "Motivational", icon: Wand2 },
   { name: "Funny", icon: Sparkles },
   { name: "Professional", icon: FileText },
@@ -53,7 +53,7 @@ export default function PostCaptionPage() {
         body: JSON.stringify({
           prompt: textPrompt,
           tone,
-          image: imageBase64, // null if no image uploaded
+          image: imageBase64, 
         }),
       });
 
@@ -184,7 +184,7 @@ export default function PostCaptionPage() {
                   <Palette className="w-6 h-6 text-pink-400" />
                 </div>
                 Choose Your Vibe
-              </label>
+              </label> 
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {tones.map((t) => {

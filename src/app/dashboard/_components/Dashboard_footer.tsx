@@ -8,20 +8,20 @@ export default function DashboardFooter() {
 
   return (
     <footer className="w-full mt-auto px-6 pb-8">
-      <div className="relative group overflow-hidden rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl transition-all duration-500 hover:border-white/20">
+      <div className="relative group overflow-hidden rounded-2xl bg-card border border-border backdrop-blur-xl transition-all duration-500 hover:border-border/80">
         {/* Background glow effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-sky-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         <div className="relative z-10 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
 
           {/* Copyright & Brand */}
           <div className="flex flex-col items-center md:items-start space-y-1">
             <div className="flex items-center gap-2">
-              <span className="instagenie-logo text-xl text-sky-400">InstaGenie</span>
-              <span className="text-gray-600 text-xs font-mono">v1.2</span>
+              <span className="instagenie-logo text-xl text-primary">InstaGenie</span>
+              <span className="text-muted-foreground text-xs font-mono">v1.2</span>
             </div>
-            <p className="text-gray-500 text-xs font-medium">
-              © {currentYear} Created by <span className="text-gray-300 hover:text-sky-400 transition-colors cursor-pointer">Sarvjeet Swanshi</span>
+            <p className="text-muted-foreground text-xs font-medium">
+              © {currentYear} Created by <span className="text-foreground hover:text-primary transition-colors cursor-pointer">Sarvjeet Swanshi</span>
             </p>
           </div>
 
@@ -51,7 +51,7 @@ function SocialLink({ href, icon: Icon }: { href: string; icon: any }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="p-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-sky-400 hover:border-sky-400/50 hover:bg-sky-400/5 transition-all duration-300 hover:-translate-y-1 shadow-sm"
+      className="p-2 rounded-lg bg-card border border-border text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 hover:-translate-y-1 shadow-sm"
     >
       <Icon size={16} />
     </a>

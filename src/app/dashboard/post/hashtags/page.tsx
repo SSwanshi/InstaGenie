@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Upload, Image as ImageIcon, Sparkles, Copy, Check, Wand2, FileText, Palette, Hash, TrendingUp, Search, Target } from "lucide-react";
+import { Upload, Image as ImageIcon, Sparkles, Copy, Check, Wand2, FileText, Hash, TrendingUp, Search, Target } from "lucide-react";
 
 const hashtagTypes = [
   { name: "Trending", icon: TrendingUp },
@@ -10,8 +10,8 @@ const hashtagTypes = [
   { name: "Viral", icon: Sparkles },
   { name: "Community", icon: Search },
   { name: "Descriptive", icon: FileText },
-  { name: "Event", icon: Wand2 },
-];
+  { name: "Event", icon: Wand2 }, 
+]; 
 
 export default function PostHashtagPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -19,6 +19,7 @@ export default function PostHashtagPage() {
   const [textPrompt, setTextPrompt] = useState("");
   const [type, setType] = useState("Trending");
   const [hashtags, setHashtags] = useState<string | null>(null);
+  const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -28,18 +29,48 @@ export default function PostHashtagPage() {
 
     setFile(file);
     setPreviewUrl(URL.createObjectURL(file));
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result?.toString().split(",")[1]; // remove data:image/...
+      setImageBase64(base64String || null);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleGenerate = async () => {
     setLoading(true);
     setHashtags(null);
 
-    // Simulate API call
-    setTimeout(() => {
-      setHashtags("#fyp #trending #viral #aesthetic #contentcreator #digitalmarketing #goals #inspiration #dailygrind #creative");
-      setLoading(false);
-    }, 2000);
-  };
+    try {
+      const res = await fetch("/api/generate-hashtag", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: textPrompt,
+          type,
+          image: imageBase64, 
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setHashtags(data.hashtags);
+      } else {
+        console.error(data.error || "API error");
+        setHashtags("⚠️ Failed to generate hashtags. Please try again.");
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+      setHashtags("⚠️ Something went wrong.");
+    }
+
+    setLoading(false);
+
+  }
 
   const copyToClipboard = async () => {
     if (hashtags) {

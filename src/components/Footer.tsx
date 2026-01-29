@@ -1,11 +1,6 @@
 export default function Footer() {
     return (
-        <footer className="relative bg-gradient-to-t from-slate-900 via-slate-800 to-slate-900 border-t border-white/10">
-            {/* Background Effects */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-40 left-1/4 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl"></div>
-                <div className="absolute -top-40 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl"></div>
-            </div>
+        <footer className="relative bg-card border-t border-border mt-12">
 
             {/* Main Footer Content */}
             <div className="relative z-10 max-w-6xl mx-auto px-6 py-12">
@@ -13,10 +8,10 @@ export default function Footer() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
                     {/* Brand Section - Takes more space */}
                     <div className="lg:col-span-3">
-                        <h3 className="instagenie-logo text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-4">
+                        <h3 className="instagenie-logo text-2xl font-bold text-primary mb-4">
                             InstaGenie
                         </h3>
-                        <p className="text-gray-400 mb-6 text-base leading-relaxed">
+                        <p className="text-muted-foreground mb-6 text-base leading-relaxed">
                             Supercharge your Instagram content with AI-powered captions, hashtags, and creative tools designed for modern creators. Transform your social media presence with intelligent automation and boost your engagement with cutting-edge technology.
                         </p>
 

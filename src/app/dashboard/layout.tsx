@@ -39,12 +39,7 @@ export default function DashboardLayout({
 
   /* -------------------- Layout -------------------- */
   return (
-    <div className="min-h-screen flex flex-col bg-[#030014] text-white selection:bg-purple-500/30 overflow-x-hidden">
-      {/* Background Glows */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/20 blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-900/20 blur-[120px] animate-pulse delay-700" />
-      </div>
+    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300 overflow-x-hidden">
 
       {/* Navbar */}
       <DashboardNavbar
@@ -62,7 +57,7 @@ export default function DashboardLayout({
         />
 
         {/* Main */}
-        <main className="flex-1 min-h-[calc(100vh-4rem)] flex flex-col bg-transparent backdrop-blur-[2px]">
+        <main className="flex-1 min-h-[calc(100vh-4rem)] flex flex-col">
           <div className="flex-1">
             {children}
           </div>

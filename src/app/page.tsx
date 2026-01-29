@@ -26,18 +26,18 @@ const ModernLandingPage = () => {
     {
       icon: (
         <svg
-  className="w-8 h-8"
-  fill="none"
-  viewBox="0 0 24 24"
->
-  <path
-    stroke="white"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth="2"
-    d="M8 10h8M8 14h6m-2 6l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-  />
-</svg>
+          className="w-8 h-8"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="white"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M8 10h8M8 14h6m-2 6l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+          />
+        </svg>
 
 
       ),
@@ -70,19 +70,13 @@ const ModernLandingPage = () => {
 
 
   return (
-    <div className="dark min-h-screen relative overflow-hidden bg-black">
+    <div className="min-h-screen relative overflow-hidden bg-background transition-colors duration-300">
 
       {/* Animated Background Elements */}
-      {/* Purple Glow Accents */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Top-left glow */}
-        <div className="absolute -top-48 -left-48 w-[700px] h-[700px] bg-purple-700/30 rounded-full blur-[180px]" />
-
-        {/* Right-side glow */}
-        <div className="absolute top-1/4 right-[-300px] w-[900px] h-[900px] bg-indigo-600/25 rounded-full blur-[220px]" />
-
-        {/* Bottom glow */}
-        <div className="absolute bottom-[-350px] left-1/3 w-[900px] h-[900px] bg-fuchsia-700/20 rounded-full blur-[260px]" />
+      {/* Animated Background Elements - Removed for simple clean UI */}
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_24px,var(--border)_25px,var(--border)_26px,transparent_27px,transparent_74px,var(--border)_75px,var(--border)_76px,transparent_77px),linear-gradient(var(--border)_1px,transparent_1px)] bg-[length:100px_100px]"></div>
       </div>
 
 
@@ -102,17 +96,17 @@ const ModernLandingPage = () => {
             {/* Main Heading with Staggered Animation */}
             <div className="mb-6">
               <h1 className={`mt-[-90px] text-6xl md:text-7xl lg:text-7xl font-bold leading-tight transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-                <span className="block text-white mb-2">Let AI Handle</span>
+                <span className="block text-foreground mb-2">Let AI Handle</span>
               </h1>
               <h1 className={`text-6xl md:text-7xl lg:text-7xl font-bold leading-tight transition-all duration-1000 delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-                <span className="block bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
+                <span className="block text-primary animate-pulse">
                   The Aesthetic
                 </span>
               </h1>
             </div>
 
             {/* Subtitle */}
-            <p className={`text-xl text-white/80 max-w-xl mb-12 leading-relaxed transition-all duration-1000 delay-1100 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <p className={`text-xl text-muted-foreground max-w-xl mb-12 leading-relaxed transition-all duration-1000 delay-1100 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               InstaGenie&apos;s got your back. Get badass AI-powered captions, hashtags, and music to make your posts look premium.
             </p>
 
@@ -120,7 +114,7 @@ const ModernLandingPage = () => {
             <div className={`flex flex-col sm:flex-row gap-4 mb-8 transition-all duration-1000 delay-1300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               <Link
                 href="/dashboard"
-                className="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-2xl hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-indigo-500/25 hover:scale-105 transform"
+                className="group relative px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-2xl hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform"
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   Start for Free
@@ -146,18 +140,17 @@ const ModernLandingPage = () => {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className={`group p-6 bg-white/5 backdrop-blur-lg rounded-3xl border border-white/10 transition-all duration-500 hover:scale-105 cursor-pointer ${currentFeature === index ? 'bg-white/15 border-purple-400/50 shadow-lg shadow-purple-500/25' : 'hover:bg-white/10'
+                  className={`group p-6 bg-card rounded-3xl border border-border transition-all duration-500 hover:scale-105 cursor-pointer ${currentFeature === index ? 'bg-muted border-primary/50 shadow-md' : 'hover:bg-muted/50'
                     }`}
                   onClick={() => setCurrentFeature(index)}
                 >
-                  <div className={`w-16 h-16 bg-gradient-to-r ${index === 0 ? 'from-indigo-500 to-purple-500' :
-                    index === 1 ? 'from-purple-500 to-pink-500' :
-                      'from-pink-500 to-rose-500'
-                    } rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    {feature.icon}
+                  <div className={`w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <div className="text-primary">
+                      {feature.icon}
+                    </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-                  <p className="text-white/70">{feature.description}</p>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
                 </div>
               ))}
             </div>
@@ -167,7 +160,7 @@ const ModernLandingPage = () => {
               {features.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${currentFeature === index ? 'bg-purple-400' : 'bg-white/30'
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${currentFeature === index ? 'bg-primary' : 'bg-muted'
                     }`}
                   onClick={() => setCurrentFeature(index)}
                 />
@@ -179,9 +172,9 @@ const ModernLandingPage = () => {
         {/* Floating Action Elements */}
         <div className="fixed bottom-8 right-8 z-50">
           <div className={`flex flex-col space-y-4 transition-all duration-1000 delay-2000 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
-            <button onClick={() => mailing()} className="w-14 h-14 bg-white/10 backdrop-blur-lg rounded-full flex items-center justify-center border border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300 group">
+            <button onClick={() => mailing()} className="w-14 h-14 bg-card rounded-full flex items-center justify-center border border-border hover:bg-muted hover:scale-110 transition-all duration-300 group">
               <svg
-                className="w-6 h-6 text-white group-hover:scale-110 transition-transform"
+                className="w-6 h-6 text-foreground group-hover:scale-110 transition-transform"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -204,7 +197,7 @@ const ModernLandingPage = () => {
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse"
+            className="absolute w-1 h-1 bg-primary/20 rounded-full animate-pulse"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,

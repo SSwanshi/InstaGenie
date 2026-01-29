@@ -1,80 +1,116 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import { GoogleGenerativeAI, Content } from "@google/generative-ai";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY!, 
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: NextRequest) {
-    try {
-        const { prompt, tone, image } = await req.json();
+  try {
+    const { prompt, type, image } = await req.json();
 
-        if (!tone) {
-            return NextResponse.json({ error: "Tone is required." }, { status: 400 });
-        }
-
-        // Build messages based on inputs
-        let messages: OpenAI.Chat.ChatCompletionMessageParam[] = [];
-
-        // SYSTEM: always provide the hashtag role
-        const systemMessage: OpenAI.Chat.ChatCompletionMessageParam = {
-            role: "system",
-            content: `You're an expert Instagram hashtag writer. Write a catchy, engaging, short hashtags minimum 5. Just give hashtags and no content. Tone: ${tone}.`,
-        };
-
-
-        if (image) {
-            // IMAGE + optional prompt
-            const visionContent: OpenAI.Chat.ChatCompletionContentPart[] = [
-                {
-                    type: "image_url",
-                    image_url: { url: `data:image/jpeg;base64,${image}` },
-                },
-            ];
-
-            if (prompt) {
-                visionContent.push({
-                    type: "text",
-                    text: prompt,
-                });
-            }
-
-            messages = [
-                systemMessage,
-                {
-                    role: "user",
-                    content: visionContent,
-                },
-            ];
-        } else if (prompt) {
-            // TEXT only
-            messages = [
-                systemMessage,
-                {
-                    role: "user",
-                    content: prompt,
-                },
-            ];
-        } else {
-            return NextResponse.json(
-                { error: "Either prompt or image is required." },
-                { status: 400 }
-            );
-        }
-
-        // OpenAI call
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini", // fast & supports vision
-            messages,
-            max_tokens: 100,
-            temperature: 0.9,
-        });
-
-        const hashtag = response.choices[0]?.message?.content?.trim();
-
-        return NextResponse.json({ hashtag });
-    } catch (error) {
-        console.error("hashtag API error:", error);
-        return NextResponse.json({ error: "Internal server error." }, { status: 500 });
+    if (!type) {
+      return NextResponse.json(
+        { error: "type is required." },
+        { status: 400 }
+      );
     }
+
+    if (!prompt && !image) {
+      return NextResponse.json(
+        { error: "Either prompt or image is required." },
+        { status: 400 }
+      );
+    }
+
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash-lite",
+    });
+
+    const instruction = `
+You are an expert Instagram hashtag generator.
+
+Rules:
+- Output ONLY hashtags
+- No sentences
+- No explanations
+- No emojis
+- Space-separated hashtags
+- Generate 5 to 7 hashtags
+- Tone: ${type}
+`;
+
+    const contents: Content[] = [
+      {
+        role: "user",
+        parts: [{ text: instruction }],
+      },
+    ];
+
+    if (image) {
+      contents.push({
+        role: "user",
+        parts: [
+          {
+            inlineData: {
+              mimeType: "image/jpeg",
+              data: image,
+            },
+          },
+        ],
+      });
+    }
+
+    if (prompt) {
+      contents.push({
+        role: "user",
+        parts: [{ text: `Context: ${prompt}` }],
+      });
+    }
+
+    const result = await model.generateContent({
+      contents,
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 60,
+      },
+    });
+
+    let hashtag = "No hashtag generated.";
+
+    try {
+      const raw =
+        result?.response?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (raw) {
+        hashtag = raw
+          .split(/\s+/)
+          .filter(word => word.startsWith("#"))
+          .join(" ");
+      }
+    } catch {
+      console.warn("Failed to parse Gemini response");
+    }
+
+    return NextResponse.json({ hashtags: hashtag });
+
+  } catch (error: unknown) {
+  let message = "Internal server error";
+  let status = 500;
+
+  if (error instanceof Error) {
+    if (
+      error.message.includes("overloaded") ||
+      error.message.includes("503")
+    ) {
+      message = "AI service is busy. Please try again.";
+      status = 503;
+    }
+
+    console.error("Gemini hashtag API error:", error.message);
+  } else {
+    console.error("Gemini hashtag API error:", error);
+  }
+
+  return NextResponse.json({ error: message }, { status });
+}
+
 }
