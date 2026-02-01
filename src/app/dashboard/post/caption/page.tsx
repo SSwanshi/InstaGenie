@@ -63,11 +63,11 @@ export default function PostCaptionPage() {
         setCaption(data.caption);
       } else {
         console.error(data.error || "API error");
-        setCaption("⚠️ Failed to generate caption. Please try again.");
+        setCaption("Failed to generate caption. Please try again.");
       }
     } catch (error) {
       console.error("Request failed:", error);
-      setCaption("⚠️ Something went wrong.");
+      setCaption("Something went wrong.");
     }
 
     setLoading(false);
