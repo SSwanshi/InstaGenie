@@ -23,8 +23,6 @@ export default function PostCaptionPage() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
-
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;

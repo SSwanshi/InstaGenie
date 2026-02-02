@@ -23,10 +23,20 @@ export async function POST(req: NextRequest) {
     });
 
     const systemPrompt = `
-You're an expert Instagram caption writer.
-Write a catchy, engaging caption under 150 characters.
-Tone: ${tone}.
+You are a professional Instagram content creator.
+
+Rules:
+- Sound natural and human, not like AI
+- Max 150 characters
+- Use at most 2 emojis
+- Do NOT use hashtags
+- Avoid generic phrases like "living my best life"
+
+Tone: ${tone}
+
+Write one catchy Instagram caption.
 `;
+
 
     const contents: Content[] = [];
 
