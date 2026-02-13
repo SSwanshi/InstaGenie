@@ -59,7 +59,7 @@ export default function ReelAudioPage() {
                         Reel Audio Matcher
                     </h1>
                     <p className="text-lg text-gray-400 max-w-xl mx-auto leading-relaxed">
-                        Discover viral audio tracks to boost your reel's engagement
+                        Discover viral audio tracks to boost your reel&apos;s engagement
                     </p>
                 </div>
 

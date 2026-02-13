@@ -1,4 +1,4 @@
-import { FileText, Music, ArrowRight, Sparkles, TrendingUp, Target, Zap, Brain, BookOpen, Hash, Text, CircleFadingPlus } from "lucide-react";
+import { FileText, Music, ArrowRight, Sparkles, TrendingUp, Target, Zap, Brain, Hash, Text, CircleFadingPlus } from "lucide-react";
 
 export default async function StoryPage() {
 
@@ -10,7 +10,7 @@ export default async function StoryPage() {
       features: ["Quick Captions", "Story Hooks", "Question Starters", "Engagement Drivers"],
       gradient: "from-pink-500 to-rose-600",
       glowColor: "pink-500/20",
-      href: "/dashboard/story/caption",
+      href: "/dashboard/reel/caption",
     },
     {
       title: "Music / Audio",
@@ -19,7 +19,7 @@ export default async function StoryPage() {
       features: ["Trending Audio", "Mood Sync", "Viral Sounds", "Story Beats"],
       gradient: "from-cyan-500 to-blue-600",
       glowColor: "cyan-500/20",
-      href: "/dashboard/story/audio",
+      href: "/dashboard/reel/audio",
     },
     {
       title: "Hashtags",
@@ -28,7 +28,7 @@ export default async function StoryPage() {
       features: ["Trending Tags", "Niche Targeting", "Reach Optimization", "Competition Analysis"],
       gradient: "from-orange-500 to-red-500",
       glowColor: "orange-500/20",
-      href: "/dashboard/post/hashtags",
+      href: "/dashboard/reel/hashtags",
     },
     {
       title: "Description",
@@ -37,7 +37,7 @@ export default async function StoryPage() {
       features: ["Quick Captions", "Story Hooks", "Question Starters", "Engagement Drivers"],
       gradient: "from-pink-500 to-rose-600",
       glowColor: "pink-500/20",
-      href: "/dashboard/story/caption",
+      href: "/dashboard/reel/caption",
     },
     {
       title: "Trendy Topics",
@@ -46,7 +46,7 @@ export default async function StoryPage() {
       features: ["Quick Captions", "Story Hooks", "Question Starters", "Engagement Drivers"],
       gradient: "from-pink-500 to-rose-600",
       glowColor: "pink-500/20",
-      href: "/dashboard/story/caption",
+      href: "/dashboard/reel/caption",
     },
   ];
 
