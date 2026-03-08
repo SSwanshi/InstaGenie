@@ -137,7 +137,7 @@ export default function PostAudioPage() {
 
                   <label
                     htmlFor="file-upload"
-                    className="cursor-pointer block w-full h-80 border-2 border-dashed border-primary/30 rounded-3xl hover:border-primary/60 transition-all duration-500 bg-black/5 dark:bg-black/40 hover:bg-primary/5 relative overflow-hidden"
+                    className="cursor-pointer block w-full h-80 border-2 border-dashed border-primary/30 rounded-3xl hover:border-primary/60 transition-all duration-500 bg-muted/30 hover:bg-primary/5 relative overflow-hidden"
                   >
                     {previewUrl ? (
                       <div className="relative w-full h-full">
@@ -147,9 +147,9 @@ export default function PostAudioPage() {
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#030014] via-transparent to-transparent opacity-60" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-white font-medium">
+                          <div className="bg-background/80 backdrop-blur-md px-6 py-3 rounded-full border border-border text-foreground font-medium">
                             Change Image
                           </div>
                         </div>
@@ -188,9 +188,9 @@ export default function PostAudioPage() {
                       setTextPrompt(e.target.value)
                     }
                     placeholder="Describe the mood you want. Melancholic? Upbeat? Background music for a tutorial?"
-                    className="w-full h-full bg-black/5 dark:bg-black/40 backdrop-blur-sm text-foreground p-6 rounded-3xl border border-primary/30 focus:border-primary focus:ring-4 focus:ring-primary/10 resize-none placeholder-muted-foreground transition-all duration-500 text-lg leading-relaxed"
+                    className="w-full h-full bg-background text-foreground p-6 rounded-3xl border border-primary/30 focus:border-primary focus:ring-4 focus:ring-primary/10 resize-none placeholder:text-muted-foreground transition-all duration-500 text-lg leading-relaxed"
                   />
-                  <div className="absolute bottom-6 right-6 px-3 py-1 bg-black/60 rounded-full border border-border text-sm text-muted-foreground">
+                  <div className="absolute bottom-6 right-6 px-3 py-1 bg-background/80 rounded-full border border-border text-sm text-muted-foreground">
                     {textPrompt.length}/500
                   </div>
                 </div>
@@ -265,8 +265,8 @@ export default function PostAudioPage() {
         group flex items-center gap-6
         px-6 py-4
         rounded-2xl
-        bg-black/30 hover:bg-purple-500/10
-        border border-transparent hover:border-purple-500/30
+        bg-muted/50 hover:bg-primary/5
+        border border-transparent hover:border-primary/20
         transition-all duration-300
       "
                     >
@@ -276,7 +276,7 @@ export default function PostAudioPage() {
           flex-1
           text-lg font-semibold tracking-wide
           text-foreground
-          group-hover:text-purple-300
+          group-hover:text-primary
           transition-colors duration-300
         "
                       >
@@ -297,9 +297,9 @@ export default function PostAudioPage() {
           rounded-xl border
           transition-all duration-300
           font-bold
-          bg-purple-500/10 hover:bg-purple-500/20
-          border-purple-500/20
-          text-purple-400 hover:text-purple-300
+          bg-primary/10 hover:bg-primary/20
+          border-primary/20
+          text-primary hover:text-primary/80
         "
                       >
                         {copiedIndex === idx ? (
@@ -320,13 +320,13 @@ export default function PostAudioPage() {
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-3 mt-10">
-                  <span className="px-5 py-2 bg-purple-500/10 text-purple-400 rounded-full text-sm font-bold border border-purple-500/10">
+                  <span className="px-5 py-2 bg-primary/10 text-primary rounded-full text-sm font-bold border border-primary/10">
                     {mood} Mood
                   </span>
-                  <span className="px-5 py-2 bg-indigo-500/10 text-indigo-400 rounded-full text-sm font-bold border border-indigo-500/10">
+                  <span className="px-5 py-2 bg-secondary/10 text-secondary rounded-full text-sm font-bold border border-secondary/10">
                     AI Analysis
                   </span>
-                  <span className="px-5 py-2 bg-pink-500/10 text-pink-400 rounded-full text-sm font-bold border border-pink-500/10">
+                  <span className="px-5 py-2 bg-muted text-muted-foreground rounded-full text-sm font-bold border border-border">
                     Social Ready
                   </span>
                 </div>

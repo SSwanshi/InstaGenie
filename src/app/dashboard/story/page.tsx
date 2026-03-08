@@ -43,7 +43,7 @@ export default async function StoryPage() {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 tracking-tight">
             Choose Your <span className="text-primary">Story Element</span>
           </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Select what you want to create for your Instagram story and let AI do the magic
           </p>
         </div>
@@ -90,8 +90,8 @@ export default async function StoryPage() {
                       Start Creating
                       <ArrowRight className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
-                    <div className="flex items-center text-[10px] uppercase tracking-wider text-gray-500">
-                      <Sparkles className="w-3 h-3 mr-1 text-purple-500" />
+                    <div className="flex items-center text-[10px] uppercase tracking-wider text-muted-foreground">
+                      <Sparkles className="w-3 h-3 mr-1 text-primary" />
                       AI Powered
                     </div>
                   </div>
@@ -113,21 +113,21 @@ export default async function StoryPage() {
           </div>
 
           <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group text-center p-8 bg-black/5 dark:bg-black/20 rounded-[2rem] border border-border hover:border-pink-500/30 transition-all duration-300">
+            <div className="group text-center p-8 bg-muted/40 rounded-[2rem] border border-border hover:border-pink-500/30 transition-all duration-300">
               <div className="w-12 h-12 text-pink-400 mx-auto mb-6 group-hover:scale-110 transition-transform">
                 <Target className="w-full h-full" />
               </div>
               <h4 className="text-xl font-bold text-foreground mb-3">Keep It Short</h4>
               <p className="text-sm text-muted-foreground leading-relaxed">Stories are meant to be quick - use concise, impactful content.</p>
             </div>
-            <div className="group text-center p-8 bg-black/5 dark:bg-black/20 rounded-[2rem] border border-border hover:border-cyan-500/30 transition-all duration-300">
+            <div className="group text-center p-8 bg-muted/40 rounded-[2rem] border border-border hover:border-cyan-500/30 transition-all duration-300">
               <div className="w-12 h-12 text-cyan-400 mx-auto mb-6 group-hover:scale-110 transition-transform">
                 <TrendingUp className="w-full h-full" />
               </div>
               <h4 className="text-xl font-bold text-foreground mb-3">Interactive Elements</h4>
               <p className="text-sm text-muted-foreground leading-relaxed">Add polls, questions, and stickers to boost engagement.</p>
             </div>
-            <div className="group text-center p-8 bg-black/5 dark:bg-black/20 rounded-[2rem] border border-border hover:border-yellow-500/30 transition-all duration-300">
+            <div className="group text-center p-8 bg-muted/40 rounded-[2rem] border border-border hover:border-yellow-500/30 transition-all duration-300">
               <div className="w-12 h-12 text-yellow-400 mx-auto mb-6 group-hover:scale-110 transition-transform">
                 <Zap className="w-full h-full" />
               </div>

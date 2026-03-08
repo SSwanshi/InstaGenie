@@ -25,10 +25,10 @@ export default function DashboardLayout({
   /* -------------------- Loading State -------------------- */
   if (!isLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="relative">
-          <div className="w-12 h-12 rounded-full border-2 border-white/20" />
-          <div className="absolute inset-0 w-12 h-12 rounded-full border-2 border-sky-400 border-t-transparent animate-spin" />
+          <div className="w-12 h-12 rounded-full border-2 border-border" />
+          <div className="absolute inset-0 w-12 h-12 rounded-full border-2 border-primary border-t-transparent animate-spin" />
         </div>
       </div>
     );

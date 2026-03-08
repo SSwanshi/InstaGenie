@@ -26,10 +26,10 @@ export default function DashboardFooter() {
           </div>
 
           {/* Practical Links */}
-          <div className="flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-gray-400">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <Link href="/support" className="hover:text-white transition-colors">Support</Link>
+          <div className="flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+            <Link href="/support" className="hover:text-foreground transition-colors">Support</Link>
           </div>
 
           {/* Social Icons */}
