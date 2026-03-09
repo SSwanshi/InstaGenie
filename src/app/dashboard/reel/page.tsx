@@ -37,7 +37,7 @@ export default async function StoryPage() {
       features: ["Quick Captions", "Story Hooks", "Question Starters", "Engagement Drivers"],
       gradient: "from-pink-500 to-rose-600",
       glowColor: "pink-500/20",
-      href: "/dashboard/reel/caption",
+      href: "/dashboard/reel/description",
     },
     {
       title: "Trendy Topics",
@@ -46,7 +46,7 @@ export default async function StoryPage() {
       features: ["Quick Captions", "Story Hooks", "Question Starters", "Engagement Drivers"],
       gradient: "from-pink-500 to-rose-600",
       glowColor: "pink-500/20",
-      href: "/dashboard/reel/caption",
+      href: "/dashboard/reel/topics",
     },
   ];
 
