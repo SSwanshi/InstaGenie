@@ -115,6 +115,41 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Reel Category Button Styles */
+.reel-category-btn {
+  transition: all 0.3s;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--muted);
+  color: var(--foreground);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.reel-category-btn:hover:not(.selected) {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+.reel-category-btn.selected {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.dark .reel-category-btn {
+  background: var(--muted);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+}
+.dark .reel-category-btn.selected {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
 .instagenie-logo {
   font-family: "Edu NSW ACT Cursive", cursive;
   font-optical-sizing: auto;

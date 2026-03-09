@@ -3,6 +3,7 @@
 import { UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { ModeToggle } from "@/components/mode-toggle";
 
 interface DashboardNavbarProps {
   isMobileMenuOpen: boolean;
@@ -29,6 +30,9 @@ export default function DashboardNavbar({
 
         {/* Right side - User actions */}
         <div className="flex items-center gap-4">
+
+          {/* Theme Toggle */}
+          <ModeToggle />
 
           {/* User Profile */}
           <div className="flex items-center">
