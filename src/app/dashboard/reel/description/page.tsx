@@ -267,9 +267,6 @@ export default function ReelDescriptionPage() {
                   <span className="px-5 py-2 bg-primary/10 text-primary rounded-full text-sm font-bold border border-primary/10">
                     {style} Style
                   </span>
-                  <span className="px-5 py-2 bg-secondary/10 text-secondary rounded-full text-sm font-bold border border-secondary/10">
-                    Hashtags Included
-                  </span>
                 </div>
               </div>
             )}
