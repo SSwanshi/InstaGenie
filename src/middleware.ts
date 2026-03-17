@@ -1,8 +1,8 @@
 // middleware.ts
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+import { jwtVerify } from "jose";
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   if (
@@ -22,9 +22,11 @@ export function middleware(req: NextRequest) {
     }
 
     try {
-      verifyToken(token);
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+      await jwtVerify(token, secret);
       return NextResponse.next();
-    } catch {
+    } catch (error) {
+      console.error("JWT verification failed:", error);
       return NextResponse.redirect(new URL("/login", req.url));
     }
   }

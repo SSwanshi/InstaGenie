@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "./_components/Sidebar";
 import DashboardNavbar from "./_components/Dashboard_navbar";
 import DashboardFooter from "./_components/Dashboard_footer";
@@ -11,28 +10,15 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Check if user has auth token
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("authToken="))
-      ?.split("=")[1];
-
-    setIsAuthenticated(!!token);
-    setIsLoaded(true);
-
-    if (!token) {
-      router.push("/login");
-    }
-  }, [router]);
+    setIsMounted(true);
+  }, []);
 
   /* -------------------- Loading State -------------------- */
-  if (!isLoaded) {
+  if (!isMounted) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="relative">
@@ -42,9 +28,6 @@ export default function DashboardLayout({
       </div>
     );
   }
-
-  /* -------------------- Not Authenticated -------------------- */
-  if (!isAuthenticated) return null;
 
   /* -------------------- Layout -------------------- */
   return (
