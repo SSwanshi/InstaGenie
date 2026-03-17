@@ -1,7 +1,6 @@
 "use client";
 
-import { UserButton } from "@clerk/nextjs";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "@/components/mode-toggle";
 
@@ -34,19 +33,14 @@ export default function DashboardNavbar({
           {/* Theme Toggle */}
           <ModeToggle />
 
-          {/* User Profile */}
-          <div className="flex items-center">
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-9 h-9 rounded-full border border-border hover:border-primary/50 transition-all duration-300",
-                  userButtonPopoverCard: "bg-background border border-border shadow-xl",
-                  userButtonPopoverText: "text-foreground",
-                  userButtonPopoverActionButton: "hover:bg-muted text-muted-foreground hover:text-foreground transition-all duration-200 rounded-lg",
-                }
-              }}
-            />
-          </div>
+          {/* User Profile Button */}
+          <Link
+            href="/dashboard/user"
+            className="flex items-center justify-center w-9 h-9 rounded-full border border-border hover:border-primary/50 bg-muted hover:bg-muted/80 transition-all duration-300"
+            title="User Profile"
+          >
+            <User size={18} className="text-foreground" />
+          </Link>
 
           {/* Mobile Menu Toggle */}
           <button

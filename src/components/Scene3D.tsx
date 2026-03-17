@@ -15,7 +15,7 @@ import * as THREE from "three";
 
 /* -------------------- Shapes -------------------- */
 
-function HeartShape({ color, ...props }: { color: string } & any) {
+function HeartShape({ color, ...props }: { color: string; [key: string]: unknown }) {
     const shape = useMemo(() => {
         const s = new THREE.Shape();
         s.moveTo(0.5, 0.5);

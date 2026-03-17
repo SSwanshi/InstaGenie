@@ -1,4 +1,5 @@
-import { currentUser } from "@clerk/nextjs/server";
+"use client";
+
 import {
   User,
   Mail,
@@ -11,34 +12,79 @@ import {
   Zap,
 } from "lucide-react";
 import UserActions from "./UserActions";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default async function UserPage() {
-  const user = await currentUser();
+interface UserData {
+  _id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
 
-  const joinDate = user?.createdAt
-    ? new Date(user.createdAt).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "N/A";
+export default function UserPage() {
+  const [user, setUser] = useState<UserData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
-  const lastSignIn = user?.lastSignInAt
-    ? new Date(user.lastSignInAt).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "N/A";
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        // Get token from cookies
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("authToken="))
+          ?.split("=")[1];
 
-  const fullName =
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-    user?.username ||
-    "User";
+        if (!token) {
+          router.push("/login");
+          return;
+        }
 
-  const primaryEmail = user?.emailAddresses?.[0]?.emailAddress ?? "No email";
+        const response = await fetch("/api/protected", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          router.push("/login");
+          return;
+        }
+
+        const data = await response.json();
+        setUser(data.user);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+        router.push("/login");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="relative">
+          <div className="w-12 h-12 rounded-full border-2 border-border" />
+          <div className="absolute inset-0 w-12 h-12 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
+  const joinDate = new Date(user.createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const fullName = user.name || "User";
 
   const stats = [
     { label: "Posts Generated", value: "—", icon: Camera, color: "text-purple-400", bg: "bg-purple-500/10" },
@@ -62,23 +108,13 @@ export default async function UserPage() {
             {/* Avatar */}
             <div className="flex items-end gap-5 -mt-12 mb-6">
               <div className="relative">
-                {user?.imageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={user.imageUrl}
-                    alt={fullName}
-                    className="w-24 h-24 rounded-2xl border-4 border-card shadow-xl object-cover"
-                  />
-                ) : (
-                  <div className="w-24 h-24 rounded-2xl border-4 border-card shadow-xl bg-primary/10 flex items-center justify-center">
-                    <User className="w-10 h-10 text-primary" />
-                  </div>
-                )}
-                
+                <div className="w-24 h-24 rounded-2xl border-4 border-card shadow-xl bg-primary/10 flex items-center justify-center">
+                  <User className="w-10 h-10 text-primary" />
+                </div>
               </div>
               <div className="pb-1">
                 <h2 className="text-2xl font-bold text-foreground">{fullName}</h2>
-                <p className="text-muted-foreground text-sm">@{user?.username ?? "user"}</p>
+                <p className="text-muted-foreground text-sm">@{fullName.toLowerCase().replace(/\s+/g, "")}</p>
               </div>
             </div>
 
@@ -90,7 +126,7 @@ export default async function UserPage() {
                 </div>
                 <div className="min-w-0">
                   <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Email</p>
-                  <p className="text-sm font-semibold text-foreground truncate">{primaryEmail}</p>
+                  <p className="text-sm font-semibold text-foreground truncate">{user.email}</p>
                 </div>
               </div>
 
@@ -109,8 +145,8 @@ export default async function UserPage() {
                   <Clock className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Last Active</p>
-                  <p className="text-sm font-semibold text-foreground">{lastSignIn}</p>
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Account Status</p>
+                  <p className="text-sm font-semibold text-foreground">Active</p>
                 </div>
               </div>
             </div>

@@ -1,11 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Navbar() {
-  const { isSignedIn } = useUser();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if user has auth token
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("authToken="))
+      ?.split("=")[1];
+
+    setIsSignedIn(!!token);
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -24,7 +40,12 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <ModeToggle />
             {isSignedIn ? (
-              <UserButton afterSwitchSessionUrl="/" />
+              <Link
+                href="/dashboard/user"
+                className="px-5 py-2 rounded-full font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all duration-300"
+              >
+                Dashboard
+              </Link>
             ) : (
               <>
                 {/* Login */}

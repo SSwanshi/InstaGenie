@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-
+import { useRouter } from "next/navigation";
 import Sidebar from "./_components/Sidebar";
 import DashboardNavbar from "./_components/Dashboard_navbar";
 import DashboardFooter from "./_components/Dashboard_footer";
@@ -13,14 +11,25 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId, isLoaded } = useAuth();
+  const router = useRouter();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (isLoaded && !userId) {
-      redirect("/login");
+    // Check if user has auth token
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("authToken="))
+      ?.split("=")[1];
+
+    setIsAuthenticated(!!token);
+    setIsLoaded(true);
+
+    if (!token) {
+      router.push("/login");
     }
-  }, [isLoaded, userId]);
+  }, [router]);
 
   /* -------------------- Loading State -------------------- */
   if (!isLoaded) {
@@ -35,7 +44,7 @@ export default function DashboardLayout({
   }
 
   /* -------------------- Not Authenticated -------------------- */
-  if (!userId) return null;
+  if (!isAuthenticated) return null;
 
   /* -------------------- Layout -------------------- */
   return (

@@ -1,9 +1,6 @@
-import { currentUser } from "@clerk/nextjs/server";
-import { Camera, Video, FileText, Sparkles, ArrowRight, ArrowDown, LayoutDashboard } from "lucide-react";
+import { Camera, Video, FileText, Sparkles, ArrowRight, LayoutDashboard } from "lucide-react";
 
-export default async function DashboardPage() {
-  const user = await currentUser();
-
+export default function DashboardPage() {
   const contentTypes = [
     {
       title: "Post",

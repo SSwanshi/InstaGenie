@@ -45,7 +45,9 @@ export default function DashboardFooter() {
   );
 }
 
-function SocialLink({ href, icon: Icon }: { href: string; icon: any }) {
+import { ReactNode } from 'react';
+
+function SocialLink({ href, icon: Icon }: { href: string; icon: React.ComponentType<{ className: string }> }) {
   return (
     <a
       href={href}

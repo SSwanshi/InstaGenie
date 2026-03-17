@@ -1,5 +1,5 @@
 
-import { FileText, Music, Smile, ArrowRight, Sparkles, TrendingUp, Target, Zap, Brain, BookOpen } from "lucide-react";
+import { FileText, Music, Smile, ArrowRight, Sparkles, TrendingUp, Target, Zap, Brain } from "lucide-react";
 
 export default async function StoryPage() {
 
