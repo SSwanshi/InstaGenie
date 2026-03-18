@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  User,
   Mail,
   Calendar,
   Sparkles,
@@ -12,58 +11,71 @@ import {
   Zap,
 } from "lucide-react";
 import UserActions from "./UserActions";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { createAvatar } from '@dicebear/core';
+import { 
+  bottts, 
+  avataaars, 
+  croodles,
+} from '@dicebear/collection';
+import AvatarPicker from "@/components/AvatarPicker";
 
-interface UserData {
-  _id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-}
+const stylesMap = {
+  humans: avataaars,
+  animals: croodles,
+  robots: bottts,
+} as const;
 
 export default function UserPage() {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        // Get token from cookies
-        const token = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("authToken="))
-          ?.split("=")[1];
+  const { user, isLoading} = useAuth();
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [localAvatar, setLocalAvatar] = useState<{ style: string; seed: string } | null>(null);
 
-        if (!token) {
-          router.push("/login");
-          return;
-        }
+  const parsedAvatar = useMemo(() => {
+    if (localAvatar) return localAvatar;
+    try {
+      return user?.avatar ? JSON.parse(user.avatar) : { style: "humans", seed: user?.name || "User" };
+    } catch {
+      return { style: "humans", seed: user?.name || "User" };
+    }
+  }, [user, localAvatar]);
 
-        const response = await fetch("/api/protected", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  const handleUpdateAvatar = async (avatarData: { style: string; seed: string }) => {
+    setIsUpdating(true);
+    setLocalAvatar(avatarData);
+    try {
+      const res = await fetch("/api/auth/update-avatar", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avatar: JSON.stringify(avatarData) }),
+      });
 
-        if (!response.ok) {
-          router.push("/login");
-          return;
-        }
-
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
-        router.push("/login");
-      } finally {
-        setIsLoading(false);
+      if (res.ok) {
+        // Force refresh all components by reloading the page
+        window.location.reload();
+      } else {
+        setLocalAvatar(null);
+        alert("Failed to update avatar.");
       }
-    };
+    } catch {
+      setLocalAvatar(null);
+      alert("Error updating avatar.");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
-    fetchUser();
-  }, [router]);
+  const currentAvatarSvg = useMemo(() => {
+    const style = stylesMap[parsedAvatar.style as keyof typeof stylesMap] || avataaars;
+    // @ts-expect-error - Mixed DiceBear collections have incompatible option types
+    return createAvatar(style, {
+      seed: parsedAvatar.seed,
+      size: 128,
+    }).toString();
+  }, [parsedAvatar]);
 
   if (isLoading) {
     return (
@@ -90,7 +102,7 @@ export default function UserPage() {
     { label: "Posts Generated", value: "—", icon: Camera, color: "text-purple-400", bg: "bg-purple-500/10" },
     { label: "Stories Created", value: "—", icon: FileText, color: "text-blue-400", bg: "bg-blue-500/10" },
     { label: "Reels Made", value: "—", icon: Video, color: "text-orange-400", bg: "bg-orange-500/10" },
-    { label: "AI Credits Used", value: "—", icon: Sparkles, color: "text-primary", bg: "bg-primary/10" },
+    { label: "AI Credits", value: user.credits.toString(), icon: Sparkles, color: "text-primary", bg: "bg-primary/10" },
   ];
 
   return (
@@ -105,18 +117,42 @@ export default function UserPage() {
           </div>
 
           <div className="px-8 pb-8">
-            {/* Avatar */}
-            <div className="flex items-end gap-5 -mt-12 mb-6">
-              <div className="relative">
-                <div className="w-24 h-24 rounded-2xl border-4 border-card shadow-xl bg-primary/10 flex items-center justify-center">
-                  <User className="w-10 h-10 text-primary" />
+            {/* Avatar Section */}
+            <div className="flex flex-col md:flex-row items-center md:items-end gap-6 -mt-12 mb-8 text-center md:text-left">
+              <div className="relative group">
+                <div 
+                  className="w-32 h-32 rounded-[2rem] border-4 border-card shadow-2xl bg-muted flex items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+                  dangerouslySetInnerHTML={{ __html: currentAvatarSvg }}
+                  onClick={() => setIsPickerOpen(true)}
+                />
+                {isUpdating && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-[2rem]">
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent animate-spin rounded-full" />
+                  </div>
+                )}
+                <button 
+                  onClick={() => setIsPickerOpen(true)}
+                  className="absolute -bottom-1 -right-1 p-2 bg-primary text-white rounded-full shadow-lg hover:scale-110 transition-transform"
+                >
+                  <Camera className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="pb-2">
+                <h2 className="text-3xl font-bold text-foreground tracking-tight">{fullName}</h2>
+                <div className="flex items-center gap-2 text-muted-foreground mt-1 justify-center md:justify-start">
+                  <span className="text-sm font-medium">@{fullName.toLowerCase().replace(/\s+/g, "")}</span>
+                  <span className="w-1 h-1 bg-muted-foreground/30 rounded-full" />
+                  <span className="text-sm font-medium capitalize">{user.plan} user</span>
                 </div>
               </div>
-              <div className="pb-1">
-                <h2 className="text-2xl font-bold text-foreground">{fullName}</h2>
-                <p className="text-muted-foreground text-sm">@{fullName.toLowerCase().replace(/\s+/g, "")}</p>
-              </div>
             </div>
+
+            {/* Avatar Picker Component */}
+            <AvatarPicker 
+              open={isPickerOpen}
+              onClose={() => setIsPickerOpen(false)}
+              onSelect={handleUpdateAvatar}
+            />
 
             {/* Info Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -182,22 +218,32 @@ export default function UserPage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 p-5 bg-muted/40 rounded-2xl border border-border">
               <div>
                 <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-1">Current Plan</p>
-                <p className="text-lg font-bold text-foreground">Free</p>
+                <p className="text-lg font-bold text-foreground capitalize">{user.plan}</p>
               </div>
               <span className="inline-flex items-center gap-1.5 text-primary text-sm font-semibold bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20 w-fit">
                 <Sparkles className="w-3.5 h-3.5" />
-                Free Plan
+                {user.plan === "free" ? "Free Plan" : user.plan === "genie" ? "Genie" : "Genie Pro"}
               </span>
             </div>
 
-            <p className="text-sm text-muted-foreground mb-5">
-              Upgrade to <span className="text-primary font-semibold">Pro</span> to unlock unlimited AI generations and get more credits every month.
-            </p>
+            {user.plan === "free" && (
+              <>
+                <p className="text-sm text-muted-foreground mb-5">
+                  Upgrade to <span className="text-primary font-semibold">Pro</span> to unlock unlimited AI generations and get more credits every month.
+                </p>
 
-            <button className="w-full flex items-center justify-center gap-2 py-3.5 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-2xl transition-all duration-200 shadow-sm cursor-pointer">
-              <Zap className="w-4 h-4" />
-              Upgrade to Pro
-            </button>
+                <button className="w-full flex items-center justify-center gap-2 py-3.5 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-2xl transition-all duration-200 shadow-sm cursor-pointer">
+                  <Zap className="w-4 h-4" />
+                  Upgrade to Pro
+                </button>
+              </>
+            )}
+
+            {user.plan !== "free" && (
+               <p className="text-sm text-primary font-semibold">
+                 You are currently on a premium plan. Enjoy your extra features!
+               </p>
+            )}
           </div>
         </div>
 

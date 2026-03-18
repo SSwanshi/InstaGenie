@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail, Lock, User, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -10,6 +10,22 @@ export default function SignUpPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [particleStates, setParticleStates] = useState<Array<{
+    left: number;
+    top: number;
+    animationDelay: number;
+    animationDuration: number;
+  }>>([]);
+
+  useEffect(() => {
+    const particles = Array.from({ length: 10 }, () => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      animationDelay: Math.random() * 3,
+      animationDuration: 2 + Math.random() * 2
+    }));
+    setParticleStates(particles);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,15 +71,15 @@ export default function SignUpPage() {
 
       {/* Particle Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(10)].map((_, i) => (
+        {particleStates.map((particle, i) => (
           <div
             key={`particle-${i}`}
             className="absolute w-1 h-1 bg-primary/20 rounded-full animate-pulse"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 2}s`
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              animationDelay: `${particle.animationDelay}s`,
+              animationDuration: `${particle.animationDuration}s`
             }}
           />
         ))}

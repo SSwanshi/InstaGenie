@@ -14,7 +14,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/dashboard")) {
+  if (
+    pathname === "/dashboard" ||
+    pathname.startsWith("/dashboard/")
+  ) {
     const token = req.cookies.get("authToken")?.value;
 
     if (!token) {
@@ -35,5 +38,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard", "/dashboard/:path*"],
 };

@@ -1,23 +1,75 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
+import { useAuth } from "@/hooks/useAuth";
+import { User, LogOut, Settings } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { createAvatar } from '@dicebear/core';
+import { 
+  bottts, 
+  avataaars, 
+  croodles,
+} from '@dicebear/collection';
+
+const stylesMap = {
+  humans: avataaars,
+  animals: croodles,
+  robots: bottts,
+} as const;
 
 export default function Navbar() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated, isLoading, user } = useAuth();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
+  const userAvatarSvg = useMemo(() => {
+    if (!user) return "";
+    try {
+      const parsed = user.avatar ? JSON.parse(user.avatar) : { style: "humans", seed: user.name || "User" };
+     
+      const style = stylesMap[parsed.style as keyof typeof stylesMap] || avataaars;
+      // @ts-expect-error - Mixed DiceBear collections have incompatible option types
+      return createAvatar(style, {
+        seed: parsed.seed,
+        size: 32,
+      }).toString();
+    } catch {
+      return createAvatar(avataaars, {
+        seed: user.name || "User",
+        size: 32,
+      }).toString();
+    }
+  }, [user]);
+
+  // Close dropdown when clicking outside
   useEffect(() => {
-    // Check if user has auth token
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("authToken="))
-      ?.split("=")[1];
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
 
-    setIsSignedIn(!!token);
-    setIsLoading(false);
-  }, []);
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [isDropdownOpen]);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/");
+      setIsDropdownOpen(false);
+    } catch {
+      alert("Failed to logout. Please try again.");
+      setIsLoggingOut(false);
+    }
+  };
 
   if (isLoading) {
     return null;
@@ -39,13 +91,64 @@ export default function Navbar() {
           {/* Right Section */}
           <div className="flex items-center gap-3">
             <ModeToggle />
-            {isSignedIn ? (
-              <Link
-                href="/dashboard/user"
-                className="px-5 py-2 rounded-full font-semibold text-primary-foreground bg-primary hover:bg-primary/90 transition-all duration-300"
-              >
-                Dashboard
-              </Link>
+            {isAuthenticated ? (
+              <div className="relative" ref={dropdownRef}>
+                {/* Profile Button */}
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center gap-2 p-1 rounded-full border border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group overflow-hidden focus:outline-none"
+                  title="Profile"
+                >
+                  {userAvatarSvg ? (
+                    <div 
+                      className="w-8 h-8 rounded-full overflow-hidden"
+                      dangerouslySetInnerHTML={{ __html: userAvatarSvg }}
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                      <User size={18} className="text-primary" />
+                    </div>
+                  )}
+                  <div className="hidden sm:block pr-2 overflow-hidden">
+                    <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors text-left truncate max-w-[80px]">
+                      {user?.name || "User"}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground text-left">
+                      {user?.plan || "Free"}
+                    </p>
+                  </div>
+                </button>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg overflow-hidden z-10 animate-in fade-in slide-in-from-top-2 duration-200">
+                    {/* Profile Option */}
+                    <Link
+                      href="/dashboard/user"
+                      className="flex items-center gap-3 px-4 py-3 text-foreground hover:bg-primary/10 transition-colors"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <Settings size={18} />
+                      <span className="text-sm font-medium">Profile</span>
+                    </Link>
+
+                    {/* Divider */}
+                    <div className="border-t border-border" />
+
+                    {/* Logout Option */}
+                    <button
+                      onClick={handleLogout}
+                      disabled={isLoggingOut}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <LogOut size={18} />
+                      <span className="text-sm font-medium">
+                        {isLoggingOut ? "Logging out..." : "Logout"}
+                      </span>
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <>
                 {/* Login */}

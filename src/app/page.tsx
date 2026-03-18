@@ -10,6 +10,7 @@ import React, { useState, useEffect } from 'react';
 const ModernLandingPage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentFeature, setCurrentFeature] = useState(0);
+  const [particleStates, setParticleStates] = useState([]);
 
   useEffect(() => {
     setIsVisible(true);
@@ -17,6 +18,15 @@ const ModernLandingPage = () => {
     const interval = setInterval(() => {
       setCurrentFeature((prev) => (prev + 1) % 3);
     }, 3000);
+
+    // Generate random particle states only on client
+    const particles = Array.from({ length: 20 }, () => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      animationDelay: Math.random() * 3,
+      animationDuration: 2 + Math.random() * 2
+    }));
+    setParticleStates(particles);
 
     return () => clearInterval(interval);
   }, []);
@@ -194,15 +204,15 @@ const ModernLandingPage = () => {
 
       {/* Particle Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {particleStates.map((particle, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-primary/20 rounded-full animate-pulse"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 2}s`
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              animationDelay: `${particle.animationDelay}s`,
+              animationDuration: `${particle.animationDuration}s`
             }}
           />
         ))}

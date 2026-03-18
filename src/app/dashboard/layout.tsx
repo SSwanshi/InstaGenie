@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "./_components/Sidebar";
 import DashboardNavbar from "./_components/Dashboard_navbar";
 import DashboardFooter from "./_components/Dashboard_footer";
@@ -10,15 +11,35 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    // Check if user is authenticated by calling protected endpoint
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/protected", {
+          credentials: "include",
+          cache: "no-store",
+        });
+        if (!res.ok) {
+          router.push("/login");
+          return;
+        }
+        setIsAuthenticated(true);
+        setIsMounted(true);
+      } catch {
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   /* -------------------- Loading State -------------------- */
-  if (!isMounted) {
+  if (!isMounted || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="relative">

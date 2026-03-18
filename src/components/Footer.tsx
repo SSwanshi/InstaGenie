@@ -17,7 +17,7 @@ export default function Footer() {
 
                         {/* Social Links - Mobile positioned here */}
                         <div className="flex space-x-4 lg:hidden">
-                            <a href="https://sarvjeet-swanshi.vercel.app/" className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 border border-border hover:border-primary/40">
+                            <a href="https://swanshi.me/" className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 border border-border hover:border-primary/40">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <circle cx="12" cy="12" r="10" />
                                     <path d="M2 12h20" />
@@ -49,7 +49,7 @@ export default function Footer() {
 
                         {/* Social Links - Desktop positioned here */}
                         <div className="hidden lg:flex space-x-3 mt-6">
-                            <a href="https://sarvjeet-swanshi.vercel.app/" className="w-9 h-9 bg-muted rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 border border-border hover:border-primary/40">
+                            <a href="https://swanshi.me/" className="w-9 h-9 bg-muted rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 border border-border hover:border-primary/40">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <circle cx="12" cy="12" r="10" />
                                     <path d="M2 12h20" />

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Github, Globe, Linkedin, Instagram } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export default function DashboardFooter() {
   const currentYear = new Date().getFullYear();
@@ -34,7 +35,7 @@ export default function DashboardFooter() {
 
           {/* Social Icons */}
           <div className="flex items-center gap-4">
-            <SocialLink href="https://sarvjeet-swanshi.vercel.app/" icon={Globe} />
+            <SocialLink href="https://swanshi.me/" icon={Globe} />
             <SocialLink href="https://github.com/SSwanshi" icon={Github} />
             <SocialLink href="https://www.linkedin.com/in/sarvjeet-swanshi-6b6b0b296" icon={Linkedin} />
             <SocialLink href="https://www.instagram.com/sarvjeet_swanshi" icon={Instagram} />
@@ -45,9 +46,7 @@ export default function DashboardFooter() {
   );
 }
 
-import { ReactNode } from 'react';
-
-function SocialLink({ href, icon: Icon }: { href: string; icon: React.ComponentType<{ className: string }> }) {
+function SocialLink({ href, icon: Icon }: { href: string; icon: LucideIcon }) {
   return (
     <a
       href={href}

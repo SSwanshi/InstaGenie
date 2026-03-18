@@ -10,6 +10,7 @@ export interface IUser extends Document {
   isPremium: boolean;
   plan: PlanType;
   planExpiryDays: number;
+  avatar: string;
   createdAt: Date; 
   updatedAt: Date; 
 }
@@ -27,6 +28,7 @@ const UserSchema = new Schema<IUser>(
       default: "free" 
     },
     planExpiryDays: { type: Number, default: 0 },
+    avatar: { type: String, default: "initials" },
   },
   { timestamps: true }
 );
