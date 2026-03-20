@@ -2,6 +2,26 @@ import { useState, useEffect } from "react";
 
 type PlanType = "free" | "genie" | "geniepro";
 
+interface StoryService {
+  captionGenerated: number;
+  musicSuggested: number;
+  emojiSuggested: number;
+}
+
+interface PostService {
+  captionGenerated: number;
+  musicSuggested: number;
+  hashtagGenerated: number;
+}
+
+interface ReelService {
+  captionGenerated: number;
+  musicSuggested: number;
+  hashtagGenerated: number;
+  descriptionGenerated: number;
+  topicSuggested: number;
+}
+
 export interface User {
   _id: string;
   name: string;
@@ -11,6 +31,11 @@ export interface User {
   plan: PlanType;
   planExpiryDays: number;
   avatar: string;
+
+  storyService: StoryService;
+  postService: PostService;
+  reelService: ReelService;
+
   createdAt: string;
   updatedAt: string;
 }

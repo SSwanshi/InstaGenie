@@ -7,18 +7,20 @@ import {
   Camera,
   Video,
   FileText,
-  Clock,
   Zap,
+  X,
+  Hash,
+  Music,
+  MessageSquare,
+  Lightbulb,
+  AlignLeft,
+  LucideIcon,
 } from "lucide-react";
 import UserActions from "./UserActions";
-import { useState, useMemo } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { createAvatar } from '@dicebear/core';
-import { 
-  bottts, 
-  avataaars, 
-  croodles,
-} from '@dicebear/collection';
+import { useState, useMemo, useEffect } from "react";
+import { useAuth, type User } from "@/hooks/useAuth";
+import { createAvatar } from "@dicebear/core";
+import { bottts, avataaars, croodles } from "@dicebear/collection";
 import AvatarPicker from "@/components/AvatarPicker";
 
 const stylesMap = {
@@ -27,17 +29,167 @@ const stylesMap = {
   robots: bottts,
 } as const;
 
-export default function UserPage() {
+type ServiceKey = "post" | "story" | "reel";
 
-  const { user, isLoading} = useAuth();
+interface ServiceDialogProps {
+  service: ServiceKey;
+  user: User;
+  onClose: () => void;
+}
+
+const serviceConfig = {
+  post: {
+    title: "Post Service",
+    icon: Camera,
+    color: "text-purple-400",
+    bg: "bg-purple-500/10",
+    border: "border-purple-500/20",
+    accent: "bg-purple-500",
+    fields: [
+      { key: "captionGenerated", label: "Captions Generated", icon: MessageSquare },
+      { key: "musicSuggested", label: "Music Suggested", icon: Music },
+      { key: "hashtagGenerated", label: "Hashtags Generated", icon: Hash },
+    ],
+  },
+  story: {
+    title: "Story Service",
+    icon: FileText,
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
+    border: "border-blue-500/20",
+    accent: "bg-blue-500",
+    fields: [
+      { key: "captionGenerated", label: "Captions Generated", icon: MessageSquare },
+      { key: "musicSuggested", label: "Music Suggested", icon: Music },
+      { key: "emojiSuggested", label: "Emojis Suggested", icon: Sparkles },
+    ],
+  },
+  reel: {
+    title: "Reel Service",
+    icon: Video,
+    color: "text-orange-400",
+    bg: "bg-orange-500/10",
+    border: "border-orange-500/20",
+    accent: "bg-orange-500",
+    fields: [
+      { key: "captionGenerated", label: "Captions Generated", icon: MessageSquare },
+      { key: "musicSuggested", label: "Music Suggested", icon: Music },
+      { key: "hashtagGenerated", label: "Hashtags Generated", icon: Hash },
+      { key: "descriptionGenerated", label: "Descriptions Generated", icon: AlignLeft },
+      { key: "topicSuggested", label: "Topics Suggested", icon: Lightbulb },
+    ],
+  },
+};
+
+function ServiceDialog({ service, user, onClose }: ServiceDialogProps) {
+  const config = serviceConfig[service];
+  const serviceDataKey = `${service}Service` as keyof typeof user;
+  const serviceData = (user[serviceDataKey] as unknown as Record<string, number>) || {};
+  const Icon = config.icon;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+      {/* Dialog */}
+      <div
+        className={`relative bg-card rounded-[2rem] border border-border shadow-2xl w-full max-w-md overflow-hidden ${
+          service === "reel" ? "mt-20" : ""
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-6">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className={`p-2.5 ${config.bg} rounded-xl border ${config.border}`}>
+                <Icon className={`w-5 h-5 ${config.color}`} />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-foreground">{config.title}</h3>
+                <p className="text-xs text-muted-foreground">Usage breakdown</p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-muted rounded-xl transition-colors text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Stats */}
+          <div className="space-y-3">
+            {config.fields.map((field) => {
+              const FieldIcon = field.icon;
+              const value = serviceData[field.key] ?? 0;
+              return (
+                <div
+                  key={field.key}
+                  className="flex items-center justify-between p-4 bg-muted/40 rounded-2xl border border-border"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 ${config.bg} rounded-lg`}>
+                      <FieldIcon className={`w-4 h-4 ${config.color}`} />
+                    </div>
+                    <span className="text-sm font-medium text-foreground">{field.label}</span>
+                  </div>
+                  <span className="text-lg font-bold text-foreground tabular-nums">{value}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Total */}
+          <div className={`mt-4 p-4 ${config.bg} rounded-2xl border ${config.border}`}>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm font-semibold ${config.color}`}>Total Actions</span>
+              <span className={`text-xl font-bold ${config.color} tabular-nums`}>
+                {config.fields.reduce((sum, f) => sum + (serviceData[f.key] ?? 0), 0)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function UserPage() {
+  const { user, isLoading } = useAuth();
   const [isUpdating, setIsUpdating] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [localAvatar, setLocalAvatar] = useState<{ style: string; seed: string } | null>(null);
+  const [openService, setOpenService] = useState<ServiceKey | null>(null);
+
+  // Handle dialog open/close to disable scroll and interaction
+  useEffect(() => {
+    if (openService) {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+      document.body.classList.add("dialog-open");
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.classList.remove("dialog-open");
+    }
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.classList.remove("dialog-open");
+    };
+  }, [openService]);
 
   const parsedAvatar = useMemo(() => {
     if (localAvatar) return localAvatar;
     try {
-      return user?.avatar ? JSON.parse(user.avatar) : { style: "humans", seed: user?.name || "User" };
+      return user?.avatar
+        ? JSON.parse(user.avatar)
+        : { style: "humans", seed: user?.name || "User" };
     } catch {
       return { style: "humans", seed: user?.name || "User" };
     }
@@ -54,7 +206,6 @@ export default function UserPage() {
       });
 
       if (res.ok) {
-        // Force refresh all components by reloading the page
         window.location.reload();
       } else {
         setLocalAvatar(null);
@@ -69,7 +220,8 @@ export default function UserPage() {
   };
 
   const currentAvatarSvg = useMemo(() => {
-    const style = stylesMap[parsedAvatar.style as keyof typeof stylesMap] || avataaars;
+    const style =
+      stylesMap[parsedAvatar.style as keyof typeof stylesMap] || avataaars;
     // @ts-expect-error - Mixed DiceBear collections have incompatible option types
     return createAvatar(style, {
       seed: parsedAvatar.seed,
@@ -98,11 +250,31 @@ export default function UserPage() {
 
   const fullName = user.name || "User";
 
-  const stats = [
-    { label: "Posts Generated", value: "—", icon: Camera, color: "text-purple-400", bg: "bg-purple-500/10" },
-    { label: "Stories Created", value: "—", icon: FileText, color: "text-blue-400", bg: "bg-blue-500/10" },
-    { label: "Reels Made", value: "—", icon: Video, color: "text-orange-400", bg: "bg-orange-500/10" },
-    { label: "AI Credits", value: user.credits.toString(), icon: Sparkles, color: "text-primary", bg: "bg-primary/10" },
+  const serviceCards: { key: ServiceKey; label: string; icon: LucideIcon; color: string; bg: string; border: string }[] = [
+    {
+      key: "post",
+      label: "Post Service",
+      icon: Camera,
+      color: "text-purple-400",
+      bg: "bg-purple-500/10",
+      border: "border-purple-500/20",
+    },
+    {
+      key: "story",
+      label: "Story Service",
+      icon: FileText,
+      color: "text-blue-400",
+      bg: "bg-blue-500/10",
+      border: "border-blue-500/20",
+    },
+    {
+      key: "reel",
+      label: "Reel Service",
+      icon: Video,
+      color: "text-orange-400",
+      bg: "bg-orange-500/10",
+      border: "border-orange-500/20",
+    },
   ];
 
   return (
@@ -116,39 +288,74 @@ export default function UserPage() {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(71,110,102,0.15),_transparent_60%)]" />
           </div>
 
-          <div className="px-8 pb-8">
-            {/* Avatar Section */}
-            <div className="flex flex-col md:flex-row items-center md:items-end gap-6 -mt-12 mb-8 text-center md:text-left">
-              <div className="relative group">
-                <div 
-                  className="w-32 h-32 rounded-[2rem] border-4 border-card shadow-2xl bg-muted flex items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
-                  dangerouslySetInnerHTML={{ __html: currentAvatarSvg }}
-                  onClick={() => setIsPickerOpen(true)}
-                />
-                {isUpdating && (
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-[2rem]">
-                    <div className="w-6 h-6 border-2 border-white border-t-transparent animate-spin rounded-full" />
+          <div className="px-8 pb-8 ">
+            {/* Avatar + Name + AI Credits row */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 -mt-12 mb-8">
+              {/* Left: Avatar + Name */}
+              <div className="flex flex-col md:flex-row items-center md:items-center gap-6 text-center md:text-left">
+                <div className="relative group">
+                  <div
+                    className="w-32 h-32 rounded-[2rem] border-4 border-card shadow-2xl bg-muted flex items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+                    dangerouslySetInnerHTML={{ __html: currentAvatarSvg }}
+                    onClick={() => setIsPickerOpen(true)}
+                  />
+                  {isUpdating && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-[2rem]">
+                      <div className="w-6 h-6 border-2 border-white border-t-transparent animate-spin rounded-full" />
+                    </div>
+                  )}
+                  <button
+                    onClick={() => setIsPickerOpen(true)}
+                    className="absolute -bottom-1 -right-1 p-2 bg-primary text-white rounded-full shadow-lg hover:scale-110 transition-transform"
+                  >
+                    <Camera className="w-4 h-4" />
+                  </button>
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold text-foreground tracking-tight">{fullName}</h2>
+                  <div className="flex items-center gap-2 text-muted-foreground mt-1 justify-center md:justify-start">
+                    <span className="text-sm font-medium">
+                      @{fullName.toLowerCase().replace(/\s+/g, "")}
+                    </span>
+                    <span className="w-1 h-1 bg-muted-foreground/30 rounded-full" />
+                    <span className="text-sm font-medium capitalize">{user.plan} user</span>
                   </div>
-                )}
-                <button 
-                  onClick={() => setIsPickerOpen(true)}
-                  className="absolute -bottom-1 -right-1 p-2 bg-primary text-white rounded-full shadow-lg hover:scale-110 transition-transform"
-                >
-                  <Camera className="w-4 h-4" />
-                </button>
+                </div>
               </div>
-              <div className="pb-2">
-                <h2 className="text-3xl font-bold text-foreground tracking-tight">{fullName}</h2>
-                <div className="flex items-center gap-2 text-muted-foreground mt-1 justify-center md:justify-start">
-                  <span className="text-sm font-medium">@{fullName.toLowerCase().replace(/\s+/g, "")}</span>
-                  <span className="w-1 h-1 bg-muted-foreground/30 rounded-full" />
-                  <span className="text-sm font-medium capitalize">{user.plan} user</span>
+
+              {/* Right: AI Credits */}
+              <div className="flex justify-center md:justify-end">
+                <div className="relative w-40 h-40 flex items-center justify-center">
+                  {/* Animated outer circle */}
+                  <svg className="absolute inset-0 w-full h-full animate-spin" style={{animationDuration: '4s'}} viewBox="0 0 100 100">
+                    <defs>
+                      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="currentColor" className="text-primary" />
+                        <stop offset="100%" stopColor="currentColor" className="text-primary opacity-20" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="url(#grad1)" strokeWidth="3" strokeDasharray="70 200" strokeLinecap="round" />
+                  </svg>
+
+                  {/* Static background circle */}
+                  <div className="absolute inset-2 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full border border-primary/20" />
+
+                  {/* Content circle */}
+                  <div className="relative w-32 h-32 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-primary/5 to-transparent rounded-full border-2 border-primary/30 shadow-lg">
+                    <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+                    <div className="text-center">
+                      <p className="text-xs text-muted-foreground font-medium tracking-wide">Genie Credits</p>
+                      <p className="text-3xl font-bold text-primary tabular-nums leading-tight">
+                        {user.credits}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Avatar Picker Component */}
-            <AvatarPicker 
+            <AvatarPicker
               open={isPickerOpen}
               onClose={() => setIsPickerOpen(false)}
               onSelect={handleUpdateAvatar}
@@ -178,31 +385,45 @@ export default function UserPage() {
 
               <div className="flex items-center gap-3 p-4 bg-muted/40 rounded-2xl border border-border">
                 <div className="p-2 bg-primary/10 rounded-xl">
-                  <Clock className="w-5 h-5 text-primary" />
+                  <Zap className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Account Status</p>
-                  <p className="text-sm font-semibold text-foreground">Active</p>
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Credits Used</p>
+                  <p className="text-sm font-semibold text-foreground">20</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <div key={stat.label} className="bg-card rounded-2xl border border-border p-6 shadow-sm hover:border-primary/30 transition-all duration-300">
-                <div className={`inline-flex p-2.5 ${stat.bg} rounded-xl mb-4`}>
-                  <Icon className={`w-5 h-5 ${stat.color}`} />
-                </div>
-                <p className="text-2xl font-bold text-foreground mb-1">{stat.value}</p>
-                <p className="text-xs text-muted-foreground">{stat.label}</p>
+        {/* Service Usage */}
+        <div className="bg-card rounded-[2.5rem] border border-border shadow-xl overflow-hidden mb-8">
+          <div className="p-8">
+            <h3 className="text-xl font-bold text-foreground flex items-center gap-3 mb-6">
+              <div className="p-2 bg-primary/10 rounded-xl">
+                <Zap className="w-5 h-5 text-primary" />
               </div>
-            );
-          })}
+              Service Usage
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {serviceCards.map(({ key, label, icon: Icon, color, bg, border }) => (
+                <button
+                  key={key}
+                  onClick={() => setOpenService(key)}
+                  className={`group flex flex-col items-center gap-4 p-6 ${bg} border ${border} rounded-2xl hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer text-center`}
+                >
+                  <div className={`p-3.5 bg-card rounded-2xl border ${border} shadow-sm group-hover:scale-110 transition-transform duration-200`}>
+                    <Icon className={`w-6 h-6 ${color}`} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">{label}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Click for details</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Plan Details */}
@@ -229,9 +450,9 @@ export default function UserPage() {
             {user.plan === "free" && (
               <>
                 <p className="text-sm text-muted-foreground mb-5">
-                  Upgrade to <span className="text-primary font-semibold">Pro</span> to unlock unlimited AI generations and get more credits every month.
+                  Upgrade to <span className="text-primary font-semibold">Pro</span> to unlock
+                  unlimited AI generations and get more credits every month.
                 </p>
-
                 <button className="w-full flex items-center justify-center gap-2 py-3.5 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-2xl transition-all duration-200 shadow-sm cursor-pointer">
                   <Zap className="w-4 h-4" />
                   Upgrade to Pro
@@ -240,9 +461,9 @@ export default function UserPage() {
             )}
 
             {user.plan !== "free" && (
-               <p className="text-sm text-primary font-semibold">
-                 You are currently on a premium plan. Enjoy your extra features!
-               </p>
+              <p className="text-sm text-primary font-semibold">
+                You are currently on a premium plan. Enjoy your extra features!
+              </p>
             )}
           </div>
         </div>
@@ -254,8 +475,16 @@ export default function UserPage() {
             <UserActions />
           </div>
         </div>
-
       </div>
+
+      {/* Service Dialog */}
+      {openService && (
+        <ServiceDialog
+          service={openService}
+          user={user}
+          onClose={() => setOpenService(null)}
+        />
+      )}
     </div>
   );
 }

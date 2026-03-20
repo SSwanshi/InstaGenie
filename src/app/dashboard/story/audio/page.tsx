@@ -55,6 +55,29 @@ export default function PostAudioPage() {
     reader.readAsDataURL(selectedFile);
   };
 
+  const handleIncrement = async () => {
+    try {
+      const res = await fetch("/api/increment-usage", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "story",
+          field: "musicSuggested",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log(`Count incremented to: ${data}`);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  };
+
   const handleGenerate = async () => {
     setLoading(true);
     setAudio(null);
@@ -74,6 +97,7 @@ export default function PostAudioPage() {
 
       if (res.ok) {
         setAudio(data.audio);
+        handleIncrement();
       } else {
         setAudio("Failed to generate audio. Please try again.");
       }

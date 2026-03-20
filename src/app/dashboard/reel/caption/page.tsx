@@ -32,6 +32,29 @@ export default function ReelCaptionPage() {
     setSelectedCategory(category === selectedCategory ? null : category);
   };
 
+  const handleIncrement = async () => {
+    try {
+      const res = await fetch("/api/increment-usage", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "reel",
+          field: "captionGenerated",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log(`Count incremented to: ${data}`);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  };
+
   const handleGenerate = async () => {
     setLoading(true);
     setCaption(null);
@@ -53,6 +76,7 @@ export default function ReelCaptionPage() {
 
       if (res.ok) {
         setCaption(data.caption);
+        handleIncrement();
       } else {
         console.error(data.error || "API error");
         setCaption("Failed to generate caption. Please try again.");

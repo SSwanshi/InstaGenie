@@ -59,6 +59,29 @@ export default function StoryCaptionPage() {
     reader.readAsDataURL(file);
   };
 
+  const handleIncrement = async () => {
+    try {
+      const res = await fetch("/api/increment-usage", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "story",
+          field: "emojiSuggested",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log(`Count incremented to: ${data}`);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  };
+
   const handleGenerate = async () => {
     setLoading(true);
     setGeneratedEmoji(null);
@@ -78,6 +101,7 @@ export default function StoryCaptionPage() {
 
       if (res.ok) {
         setGeneratedEmoji(data.emojis);
+        handleIncrement();
       } else {
         setGeneratedEmoji("Failed to generate emojis.");
       }

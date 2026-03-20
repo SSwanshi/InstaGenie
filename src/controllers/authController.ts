@@ -1,10 +1,6 @@
 import { connectDB } from "@/lib/db";
 import User from "@/models/user";
-import {
-  hashPassword,
-  comparePassword,
-  generateToken,
-} from "@/lib/auth";
+import { hashPassword, comparePassword, generateToken } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import type { HydratedDocument } from "mongoose";
 import type { IUser } from "@/models/user";
@@ -18,10 +14,16 @@ function getSafeUser(user: HydratedDocument<IUser>) {
     plan: user.plan,
     isPremium: user.isPremium,
     planExpiryDays: user.planExpiryDays,
+    avatar: user.avatar,
+
+    storyService: user.storyService,
+    postService: user.postService,
+    reelService: user.reelService,
+
     createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }
-
 
 export async function registerUser(req: Request) {
   try {
@@ -31,7 +33,7 @@ export async function registerUser(req: Request) {
     if (!email || !password || !name) {
       return NextResponse.json(
         { message: "All fields are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -39,7 +41,7 @@ export async function registerUser(req: Request) {
     if (existing) {
       return NextResponse.json(
         { message: "User already exists" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -49,13 +51,31 @@ export async function registerUser(req: Request) {
       email,
       password: hashed,
       name,
+
+      storyService: {
+        captionGenerated: 0,
+        musicSuggested: 0,
+        emojiSuggested: 0,
+      },
+      postService: {
+        captionGenerated: 0,
+        musicSuggested: 0,
+        hashtagGenerated: 0,
+      },
+      reelService: {
+        captionGenerated: 0,
+        musicSuggested: 0,
+        hashtagGenerated: 0,
+        descriptionGenerated: 0,
+        topicSuggested: 0,
+      },
     });
 
     const token = generateToken({ userId: user._id.toString() });
 
     const response = NextResponse.json(
       { user: getSafeUser(user), token },
-      { status: 201 }
+      { status: 201 },
     );
 
     response.cookies.set("authToken", token, {
@@ -71,11 +91,10 @@ export async function registerUser(req: Request) {
     console.error("Register Error:", error);
     return NextResponse.json(
       { message: "Something went wrong" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
 
 export async function loginUser(req: Request) {
   try {
@@ -85,16 +104,17 @@ export async function loginUser(req: Request) {
     if (!email || !password) {
       return NextResponse.json(
         { message: "Email and password required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email })
+  .select("+password storyService postService reelService");
 
     if (!user) {
       return NextResponse.json(
         { message: "Invalid credentials" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -102,7 +122,7 @@ export async function loginUser(req: Request) {
     if (!isMatch) {
       return NextResponse.json(
         { message: "Invalid credentials" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -110,7 +130,7 @@ export async function loginUser(req: Request) {
 
     const response = NextResponse.json(
       { user: getSafeUser(user), token },
-      { status: 200 }
+      { status: 200 },
     );
 
     response.cookies.set("authToken", token, {
@@ -126,7 +146,7 @@ export async function loginUser(req: Request) {
     console.error("Login Error:", error);
     return NextResponse.json(
       { message: "Something went wrong" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -134,7 +154,7 @@ export async function loginUser(req: Request) {
 export async function logoutUser() {
   const response = NextResponse.json(
     { message: "Logged out successfully" },
-    { status: 200 }
+    { status: 200 },
   );
 
   response.cookies.set("authToken", "", {

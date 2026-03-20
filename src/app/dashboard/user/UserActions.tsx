@@ -14,7 +14,7 @@ export default function UserActions() {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
       router.push("/");
-    } catch (_error) {
+    } catch {
       alert("Failed to logout. Please try again.");
       setIsLoggingOut(false);
     }
@@ -37,7 +37,7 @@ export default function UserActions() {
       }
 
       router.push("/");
-    } catch (_error) {
+    } catch {
       alert("Failed to delete account. Please try again.");
       setIsDeletingAccount(false);
     }

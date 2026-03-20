@@ -24,6 +24,11 @@ export async function connectDB(): Promise<typeof mongoose> {
   if (cached!.conn) return cached!.conn;
 
   if (!cached!.promise) {
+    // Clear model cache to pick up schema changes
+    if (mongoose.models['User']) {
+      delete mongoose.models['User'];
+    }
+    
     cached!.promise = mongoose.connect(MONGODB_URI!, {
       dbName: "instagenieDB",
     });

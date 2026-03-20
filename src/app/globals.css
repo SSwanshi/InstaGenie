@@ -156,3 +156,11 @@ body {
   font-weight: 700;
   font-style: normal;
 }
+
+/* Disable interactions when dialog is open */
+body.dialog-open nav,
+body.dialog-open [role="navigation"],
+body.dialog-open .sidebar {
+  pointer-events: none;
+  opacity: 0.5;
+}

@@ -32,6 +32,29 @@ export default function ReelHashtagPage() {
     setSelectedCategory(category === selectedCategory ? null : category);
   };
 
+  const handleIncrement = async () => {
+    try {
+      const res = await fetch("/api/increment-usage", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "reel",
+          field: "hashtagGenerated",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log(`Count incremented to: ${data}`);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  };
+
   const handleGenerate = async () => {
     setLoading(true);
     setHashtag(null);
@@ -53,6 +76,7 @@ export default function ReelHashtagPage() {
 
       if (res.ok) {
         setHashtag(data.hashtag);
+        handleIncrement();
       } else {
         console.error(data.error || "API error");
         setHashtag("Failed to generate hashtag. Please try again.");

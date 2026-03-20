@@ -38,6 +38,29 @@ export default function PostHashtagPage() {
     reader.readAsDataURL(file);
   };
 
+  const handleIncrement = async () => {
+    try {
+      const res = await fetch("/api/increment-usage", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "post",
+          field: "musicSuggested",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log(`Count incremented to: ${data}`);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  };
+
   const handleGenerate = async () => {
     setLoading(true);
     setHashtags(null);
@@ -59,6 +82,7 @@ export default function PostHashtagPage() {
 
       if (res.ok) {
         setHashtags(data.hashtags);
+        handleIncrement();
       } else {
         console.error(data.error || "API error");
         setHashtags("⚠️ Failed to generate hashtags. Please try again.");

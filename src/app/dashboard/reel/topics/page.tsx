@@ -68,6 +68,29 @@ export default function ReelAudioPage() {
     );
   };
 
+  const handleIncrement = async () => {
+    try {
+      const res = await fetch("/api/increment-usage", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "reel",
+          field: "topicSuggested",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log(`Count incremented to: ${data}`);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  };
+
   const handleGenerate = async () => {
     setLoading(true);
     setAudio(null);
@@ -89,6 +112,7 @@ export default function ReelAudioPage() {
 
       if (res.ok) {
         setAudio(data.audio);
+        handleIncrement();
       } else {
         console.error(data.error || "API error");
         setAudio("Failed to suggest topics. Please try again.");

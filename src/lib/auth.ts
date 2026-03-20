@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -43,5 +44,28 @@ export function getUserFromRequest(req: Request): { userId: string } | null {
     return verifyToken(token);
   } catch (error) {
     return error instanceof Error ? null : null;
+  }
+}
+
+export async function getUserFromCookies(req?: Request): Promise<{ userId: string } | null> {
+  try {
+    let token: string | undefined;
+
+    if (req) {
+      const authHeader = req.headers.get("authorization");
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1];
+      }
+    }
+
+    if (!token) {
+      const cookieStore = await cookies();
+      token = cookieStore.get("authToken")?.value;
+    }
+    if (!token) return null;
+
+    return verifyToken(token);
+  } catch {
+    return null;
   }
 }

@@ -2,15 +2,24 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Upload, Image as ImageIcon, Sparkles, Copy, Check, Wand2, FileText, Palette } from "lucide-react";
+import {
+  Upload,
+  Image as ImageIcon,
+  Sparkles,
+  Copy,
+  Check,
+  Wand2,
+  FileText,
+  Palette,
+} from "lucide-react";
 
 const tones = [
   { name: "Witty", icon: Sparkles },
-  { name: "Emotional", icon: FileText }, 
+  { name: "Emotional", icon: FileText },
   { name: "Motivational", icon: Wand2 },
   { name: "Funny", icon: Sparkles },
   { name: "Professional", icon: FileText },
-  { name: "Casual", icon: Palette }
+  { name: "Casual", icon: Palette },
 ];
 
 export default function PostCaptionPage() {
@@ -32,10 +41,34 @@ export default function PostCaptionPage() {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      const base64String = reader.result?.toString().split(",")[1]; // remove data:image/...
+      const base64String = reader.result?.toString().split(",")[1];
       setImageBase64(base64String || null);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleIncrement = async () => {
+    try {
+      const res = await fetch("/api/increment-usage", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "post",
+          field: "captionGenerated",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log(`Count incremented to: ${data}`);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+      setCaption("Something went wrong.");
+    }
   };
 
   const handleGenerate = async () => {
@@ -51,13 +84,14 @@ export default function PostCaptionPage() {
         body: JSON.stringify({
           prompt: textPrompt,
           tone,
-          image: imageBase64, 
+          image: imageBase64,
         }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
+        handleIncrement();
         setCaption(data.caption);
       } else {
         console.error(data.error || "API error");
@@ -70,7 +104,6 @@ export default function PostCaptionPage() {
 
     setLoading(false);
   };
-
 
   const copyToClipboard = async () => {
     if (caption) {
@@ -92,24 +125,26 @@ export default function PostCaptionPage() {
             AI Caption Generator
           </h1>
           <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            Transform your posts with AI-powered captions that capture the perfect tone
+            Transform your posts with AI-powered captions that capture the
+            perfect tone
           </p>
         </div>
 
         {/* Main Content */}
         <div className="bg-card rounded-[2.5rem] border border-border shadow-xl overflow-hidden mb-12">
           <div className="p-8 md:p-12 space-y-12">
-
             {/* Upload and Text Input Section */}
             <div className="grid lg:grid-cols-2 gap-12">
-
               {/* Image Upload */}
               <div className="space-y-4">
                 <label className="flex items-center gap-3 text-xl font-bold text-foreground mb-2">
                   <div className="p-2 bg-primary/10 rounded-lg">
                     <ImageIcon className="w-6 h-6 text-primary" />
                   </div>
-                  Upload Image <span className="text-sm font-normal text-muted-foreground ml-2">(Optional)</span>
+                  Upload Image{" "}
+                  <span className="text-sm font-normal text-muted-foreground ml-2">
+                    (Optional)
+                  </span>
                 </label>
 
                 <div className="relative group">
@@ -144,8 +179,12 @@ export default function PostCaptionPage() {
                         <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-500">
                           <Upload className="w-8 h-8" />
                         </div>
-                        <p className="text-lg font-semibold mb-2">Drop your image here</p>
-                        <p className="text-sm text-muted-foreground">or click to browse files</p>
+                        <p className="text-lg font-semibold mb-2">
+                          Drop your image here
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          or click to browse files
+                        </p>
                       </div>
                     )}
                   </label>
@@ -182,7 +221,7 @@ export default function PostCaptionPage() {
                   <Palette className="w-6 h-6 text-primary" />
                 </div>
                 Choose Your Vibe
-              </label> 
+              </label>
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {tones.map((t) => {
@@ -191,14 +230,19 @@ export default function PostCaptionPage() {
                     <button
                       key={t.name}
                       onClick={() => setTone(t.name)}
-                      className={`group relative p-6 rounded-[2rem] border-2 transition-all duration-500 ${tone === t.name
+                      className={`group relative p-6 rounded-[2rem] border-2 transition-all duration-500 ${
+                        tone === t.name
                           ? "bg-primary border-primary text-primary-foreground shadow-md"
                           : "bg-muted border-border text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-foreground"
-                        }`}
+                      }`}
                     >
                       <div className="flex flex-col items-center gap-3 relative z-10 transition-transform duration-300 group-active:scale-95">
-                        <IconComponent className={`w-6 h-6 ${tone === t.name ? "text-primary-foreground" : "text-primary"}`} />
-                        <span className="font-bold text-sm tracking-wide">{t.name}</span>
+                        <IconComponent
+                          className={`w-6 h-6 ${tone === t.name ? "text-primary-foreground" : "text-primary"}`}
+                        />
+                        <span className="font-bold text-sm tracking-wide">
+                          {t.name}
+                        </span>
                       </div>
                     </button>
                   );
@@ -222,7 +266,9 @@ export default function PostCaptionPage() {
                   ) : (
                     <>
                       <Sparkles className="w-6 h-6 animate-pulse" />
-                      <span className="tracking-wide text-3xl">Generate Caption</span>
+                      <span className="tracking-wide text-3xl">
+                        Generate Caption
+                      </span>
                     </>
                   )}
                 </div>
@@ -240,8 +286,12 @@ export default function PostCaptionPage() {
                       <Sparkles className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-foreground">Your Caption</h3>
-                      <p className="text-sm text-muted-foreground">Curated by AI to match your vibe</p>
+                      <h3 className="text-2xl font-bold text-foreground">
+                        Your Caption
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Curated by AI to match your vibe
+                      </p>
                     </div>
                   </div>
 
@@ -264,7 +314,9 @@ export default function PostCaptionPage() {
                 </div>
 
                 <div className="bg-background rounded-3xl p-8 border border-border relative group">
-                  <p className="text-foreground leading-relaxed text-xl md:text-2xl font-medium">{caption}</p>
+                  <p className="text-foreground leading-relaxed text-xl md:text-2xl font-medium">
+                    {caption}
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap gap-3 mt-8">
