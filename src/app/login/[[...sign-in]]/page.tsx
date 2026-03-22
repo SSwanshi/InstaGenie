@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Mail, Lock, LogIn } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [particleStates, setParticleStates] = useState<Array<{
@@ -48,7 +46,7 @@ export default function SignInPage() {
 
       console.log("Logged in:", data);
 
-      router.push("/dashboard");
+      window.location.href = "/";
     } catch (error) {
       console.error(error);
       alert("Error occurred");

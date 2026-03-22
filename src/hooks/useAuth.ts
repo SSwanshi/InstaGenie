@@ -36,6 +36,8 @@ export interface User {
   postService: PostService;
   reelService: ReelService;
 
+  creditsUsed: number;
+
   createdAt: string;
   updatedAt: string;
 }

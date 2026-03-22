@@ -20,6 +20,8 @@ function getSafeUser(user: HydratedDocument<IUser>) {
     postService: user.postService,
     reelService: user.reelService,
 
+    creditsUsed: user.creditsUsed,
+
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };
@@ -69,6 +71,7 @@ export async function registerUser(req: Request) {
         descriptionGenerated: 0,
         topicSuggested: 0,
       },
+      
     });
 
     const token = generateToken({ userId: user._id.toString() });

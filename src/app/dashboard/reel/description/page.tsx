@@ -55,6 +55,29 @@ export default function ReelDescriptionPage() {
     }
   };
 
+  const handleCredits = async () => {
+    try{
+      const res = await fetch("/api/credits-used", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "reel",
+          field: "descriptionGenerated",
+        }),
+        headers:{
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if(res.ok){
+        console.log(`Credits used till now: ${data}`);
+      }
+    }catch (error) {
+      console.error("Request failed:", error);
+    }
+  }
+
   const handleGenerate = async () => {
     setLoading(true);
     setDescription(null);
@@ -77,6 +100,7 @@ export default function ReelDescriptionPage() {
       if (res.ok) {
         setDescription(data.description);
         handleIncrement();
+        handleCredits();
       } else {
         console.error(data.error || "API error");
         setDescription("Failed to generate description. Please try again.");

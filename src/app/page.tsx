@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react';
 const ModernLandingPage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentFeature, setCurrentFeature] = useState(0);
-  const [particleStates, setParticleStates] = useState([]);
+  const [particleStates, setParticleStates] = useState<Array<{ left: number; top: number; animationDelay: number; animationDuration: number }>>([]);
 
   useEffect(() => {
     setIsVisible(true);
@@ -105,7 +105,7 @@ const ModernLandingPage = () => {
 
             {/* Main Heading with Staggered Animation */}
             <div className="mb-6">
-              <h1 className={`mt-[-90px] text-6xl md:text-7xl lg:text-7xl font-bold leading-tight transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              <h1 className={`mt-0 md:mt-[-90px] text-6xl md:text-7xl lg:text-7xl font-bold leading-tight transition-all duration-1000 delay-500 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
                 <span className="block text-foreground mb-2">Let AI Handle</span>
               </h1>
               <h1 className={`text-6xl md:text-7xl lg:text-7xl font-bold leading-tight transition-all duration-1000 delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
@@ -152,7 +152,7 @@ const ModernLandingPage = () => {
                   key={index}
                   className={`group p-6 bg-card rounded-3xl border border-border transition-all duration-500 hover:scale-105 cursor-pointer ${currentFeature === index ? 'bg-muted border-primary/50 shadow-md' : 'hover:bg-muted/50'
                     }`}
-                  onClick={() => setCurrentFeature(index)}
+                  onClick={() => window.location.href = "/dashboard"}
                 >
                   <div className={`w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <div className="text-primary">
@@ -172,7 +172,7 @@ const ModernLandingPage = () => {
                   key={index}
                   className={`w-3 h-3 rounded-full transition-all duration-300 ${currentFeature === index ? 'bg-primary' : 'bg-muted'
                     }`}
-                  onClick={() => setCurrentFeature(index)}
+                  onClick={() => window.location.href = "/dashboard"}
                 />
               ))}
             </div>

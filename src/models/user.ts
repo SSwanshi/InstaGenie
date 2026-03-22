@@ -34,6 +34,7 @@ export interface IUser extends Document {
   storyService: IStoryService;
   postService: IPostService;
   reelService: IReelService;
+  creditsUsed: number;
 
   createdAt: Date;
   updatedAt: Date;
@@ -82,6 +83,7 @@ const UserSchema = new Schema<IUser>(
       },
       default: { captionGenerated: 0, musicSuggested: 0, hashtagGenerated: 0, descriptionGenerated: 0, topicSuggested: 0 },
     },
+    creditsUsed: {type: Number, default: 0},
   },
   { timestamps: true }
 );

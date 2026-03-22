@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Mail, Lock, User, UserPlus } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +47,7 @@ export default function SignUpPage() {
 
       console.log("Registered:", data);
 
-      router.push("/dashboard");
+      window.location.href = "/";
     } catch (error) {
       console.error(error);
       alert("Error occurred");

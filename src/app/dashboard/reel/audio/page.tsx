@@ -56,6 +56,29 @@ export default function ReelAudioPage() {
     }
   };
 
+  const handleCredits = async () => {
+    try{
+      const res = await fetch("/api/credits-used", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "reel",
+          field: "musicSuggested",
+        }),
+        headers:{
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if(res.ok){
+        console.log(`Credits used till now: ${data}`);
+      }
+    }catch (error) {
+      console.error("Request failed:", error);
+    }
+  }
+
   const handleGenerate = async () => {
     setLoading(true);
     setAudio(null);
@@ -78,6 +101,7 @@ export default function ReelAudioPage() {
       if (res.ok) {
         setAudio(data.audio);
         handleIncrement();
+        handleCredits();
       } else {
         console.error(data.error || "API error");
         setAudio("Failed to suggest audio. Please try again.");

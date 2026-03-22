@@ -82,6 +82,29 @@ export default function StoryCaptionPage() {
     }
   };
 
+  const handleCredits = async () => {
+    try{
+      const res = await fetch("/api/credits-used", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "story",
+          field: "emojiSuggested",
+        }),
+        headers:{
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if(res.ok){
+        console.log(`Credits used till now: ${data}`);
+      }
+    }catch (error) {
+      console.error("Request failed:", error);
+    }
+  }
+
   const handleGenerate = async () => {
     setLoading(true);
     setGeneratedEmoji(null);
@@ -102,6 +125,7 @@ export default function StoryCaptionPage() {
       if (res.ok) {
         setGeneratedEmoji(data.emojis);
         handleIncrement();
+        handleCredits();
       } else {
         setGeneratedEmoji("Failed to generate emojis.");
       }

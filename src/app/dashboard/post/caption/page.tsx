@@ -71,6 +71,29 @@ export default function PostCaptionPage() {
     }
   };
 
+  const handleCredits = async () => {
+    try{
+      const res = await fetch("/api/credits-used", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "post",
+          field: "captionGenerated",
+        }),
+        headers:{
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if(res.ok){
+        console.log(`Credits used till now: ${data}`);
+      }
+    }catch (error) {
+      console.error("Request failed:", error);
+    }
+  }
+
   const handleGenerate = async () => {
     setLoading(true);
     setCaption(null);
@@ -92,6 +115,7 @@ export default function PostCaptionPage() {
 
       if (res.ok) {
         handleIncrement();
+        handleCredits();
         setCaption(data.caption);
       } else {
         console.error(data.error || "API error");

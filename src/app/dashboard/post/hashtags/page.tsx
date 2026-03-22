@@ -44,7 +44,7 @@ export default function PostHashtagPage() {
         method: "POST",
         body: JSON.stringify({
           type: "post",
-          field: "musicSuggested",
+          field: "hashtagGenerated",
         }),
         headers: {
           "Content-Type": "application/json",
@@ -60,6 +60,29 @@ export default function PostHashtagPage() {
       console.error("Request failed:", error);
     }
   };
+
+  const handleCredits = async () => {
+    try{
+      const res = await fetch("/api/credits-used", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "post",
+          field: "hashtagGenerated",
+        }),
+        headers:{
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if(res.ok){
+        console.log(`Credits used till now: ${data}`);
+      }
+    }catch (error) {
+      console.error("Request failed:", error);
+    }
+  }
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -83,6 +106,7 @@ export default function PostHashtagPage() {
       if (res.ok) {
         setHashtags(data.hashtags);
         handleIncrement();
+        handleCredits();
       } else {
         console.error(data.error || "API error");
         setHashtags("⚠️ Failed to generate hashtags. Please try again.");

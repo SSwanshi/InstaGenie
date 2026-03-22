@@ -78,6 +78,29 @@ export default function PostAudioPage() {
     }
   };
 
+  const handleCredits = async () => {
+    try{
+      const res = await fetch("/api/credits-used", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "story",
+          field: "musicSuggested",
+        }),
+        headers:{
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if(res.ok){
+        console.log(`Credits used till now: ${data}`);
+      }
+    }catch (error) {
+      console.error("Request failed:", error);
+    }
+  }
+
   const handleGenerate = async () => {
     setLoading(true);
     setAudio(null);
@@ -98,6 +121,7 @@ export default function PostAudioPage() {
       if (res.ok) {
         setAudio(data.audio);
         handleIncrement();
+        handleCredits();
       } else {
         setAudio("Failed to generate audio. Please try again.");
       }

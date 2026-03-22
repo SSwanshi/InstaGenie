@@ -5,7 +5,6 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useAuth } from "@/hooks/useAuth";
 import { User, LogOut, Settings } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { createAvatar } from '@dicebear/core';
 import { 
   bottts, 
@@ -24,7 +23,6 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   const userAvatarSvg = useMemo(() => {
     if (!user) return "";
@@ -63,8 +61,7 @@ export default function Navbar() {
     setIsLoggingOut(true);
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-      router.push("/");
-      setIsDropdownOpen(false);
+      window.location.href = "/";
     } catch {
       alert("Failed to logout. Please try again.");
       setIsLoggingOut(false);
@@ -96,7 +93,7 @@ export default function Navbar() {
                 {/* Profile Button */}
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2 p-1 rounded-full border border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group overflow-hidden focus:outline-none"
+                  className="flex items-center gap-3 px-4 py-2 rounded-full border border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group overflow-hidden focus:outline-none"
                   title="Profile"
                 >
                   {userAvatarSvg ? (
@@ -109,11 +106,11 @@ export default function Navbar() {
                       <User size={18} className="text-primary" />
                     </div>
                   )}
-                  <div className="hidden sm:block pr-2 overflow-hidden">
-                    <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors text-left truncate max-w-[80px]">
+                  <div className="hidden sm:block pr-4 overflow-hidden">
+                    <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors text-left truncate max-w-[180px]">
                       {user?.name || "User"}
                     </p>
-                    <p className="text-[10px] text-muted-foreground text-left">
+                    <p className="text-xs text-muted-foreground text-left">
                       {user?.plan || "Free"}
                     </p>
                   </div>
@@ -162,10 +159,10 @@ export default function Navbar() {
                   Login
                 </Link>
 
-                {/* Signup */}
+                {/* Signup - Hidden on mobile */}
                 <Link
                   href="/signup"
-                  className="px-6 py-2 rounded-full font-semibold text-primary-foreground
+                  className="hidden sm:block px-6 py-2 rounded-full font-semibold text-primary-foreground
                     bg-primary hover:bg-primary/90
                     shadow-lg shadow-primary/30
                     hover:shadow-primary/50 hover:scale-105

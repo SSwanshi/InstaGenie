@@ -55,6 +55,29 @@ export default function ReelHashtagPage() {
     }
   };
 
+  const handleCredits = async () => {
+    try{
+      const res = await fetch("/api/credits-used", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "reel",
+          field: "hashtagGenerated",
+        }),
+        headers:{
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if(res.ok){
+        console.log(`Credits used till now: ${data}`);
+      }
+    }catch (error) {
+      console.error("Request failed:", error);
+    }
+  }
+
   const handleGenerate = async () => {
     setLoading(true);
     setHashtag(null);
@@ -77,6 +100,7 @@ export default function ReelHashtagPage() {
       if (res.ok) {
         setHashtag(data.hashtag);
         handleIncrement();
+        handleCredits();
       } else {
         console.error(data.error || "API error");
         setHashtag("Failed to generate hashtag. Please try again.");

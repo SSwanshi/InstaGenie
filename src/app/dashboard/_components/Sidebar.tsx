@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, FileText, Film, Video, Sparkles, LogOut } from "lucide-react";
+import { useState } from "react";
 
 interface SidebarProps {
   mobileOpen: boolean;
@@ -11,6 +12,18 @@ interface SidebarProps {
 
 export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
   const pathname = usePathname();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      window.location.href = "/";
+    } catch {
+      alert("Failed to logout. Please try again.");
+      setIsLoggingOut(false);
+    }
+  };
 
   const navItems = [
     { name: "Dashboard", href: "/dashboard", icon: Home, color: "text-blue-400" },
@@ -82,9 +95,9 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
                 <p className="text-[11px] text-muted-foreground mb-4 leading-relaxed font-medium">
                   Unlock unlimited generations and premium AI models.
                 </p>
-                <button className="w-full py-2.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-black rounded-xl transition-all duration-300 shadow-sm active:scale-95 uppercase tracking-widest">
+                <Link href="/dashboard/upgrade" className="w-full block py-2.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-black rounded-xl transition-all duration-300 shadow-sm active:scale-95 uppercase tracking-widest text-center">
                   Upgrade
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -105,7 +118,6 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
         <div className="relative h-full flex flex-col p-6 pt-24">
           {/* Logo in Sidebar */}
           <div className="mb-10 px-4">
-            <h2 className="instagenie-logo text-4xl text-primary">InstaGenie</h2>
             <p className="text-muted-foreground text-[10px] mt-2 uppercase tracking-[4px] font-bold">Navigation</p>
           </div>
 
@@ -131,9 +143,35 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
             })}
           </nav>
 
-          <button className="flex items-center gap-3 px-6 py-6 text-muted-foreground hover:text-destructive transition-all duration-300 mt-auto border-t border-border mx-[-1.5rem] font-bold">
+          {/* Upgrade Card - Mobile */}
+          <div className="mx-[-1.5rem] px-6 py-4 mt-6 mb-2">
+            <div className="p-4 rounded-2xl bg-card border border-border relative overflow-hidden group/card shadow-md">
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="p-1.5 bg-primary/10 rounded-lg">
+                    <Sparkles size={14} className="text-primary" />
+                  </div>
+                  <span className="text-xs font-black text-foreground uppercase tracking-wider">Pro Access</span>
+                </div>
+                <p className="text-[11px] text-muted-foreground mb-3 leading-relaxed font-medium">
+                  Unlock unlimited generations and premium AI models.
+                </p>
+                <Link href="/dashboard/upgrade" className="w-full block py-2 bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-black rounded-xl transition-all duration-300 shadow-sm active:scale-95 uppercase tracking-widest text-center">
+                  Upgrade
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="flex items-center gap-3 px-6 py-6 text-muted-foreground hover:text-destructive transition-all duration-300 mt-auto border-t border-border mx-[-1.5rem] font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <LogOut size={20} />
-            <span className="uppercase tracking-widest text-sm">Logout</span>
+            <span className="uppercase tracking-widest text-sm">
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </span>
           </button>
         </div>
       </div>

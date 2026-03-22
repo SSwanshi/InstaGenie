@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   Mail,
   Calendar,
@@ -165,6 +166,9 @@ export default function UserPage() {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [localAvatar, setLocalAvatar] = useState<{ style: string; seed: string } | null>(null);
   const [openService, setOpenService] = useState<ServiceKey | null>(null);
+  const [creditsLeft, setCreditsLeft] = useState<number | null>(null);
+
+  
 
   // Handle dialog open/close to disable scroll and interaction
   useEffect(() => {
@@ -177,6 +181,7 @@ export default function UserPage() {
       document.body.style.overflow = "";
       document.body.classList.remove("dialog-open");
     }
+    handleCreditsLeft();
     return () => {
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
@@ -218,6 +223,29 @@ export default function UserPage() {
       setIsUpdating(false);
     }
   };
+
+  const handleCreditsLeft = async () => {
+  try {
+    const res = await fetch("/api/credits-left", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const text = await res.text();
+    if (!text) throw new Error("Empty response");
+    const data = JSON.parse(text);
+
+    if (res.ok) {
+      setCreditsLeft(data.creditsLeft);
+    } else {
+      console.error(data.message);
+    }
+  } catch (error) {
+    console.error("Request failed:", error);
+  }
+};
 
   const currentAvatarSvg = useMemo(() => {
     const style =
@@ -276,6 +304,7 @@ export default function UserPage() {
       border: "border-orange-500/20",
     },
   ];
+
 
   return (
     <div className="min-h-screen bg-transparent p-4 relative">
@@ -344,10 +373,10 @@ export default function UserPage() {
                   <div className="relative w-32 h-32 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-primary/5 to-transparent rounded-full border-2 border-primary/30 shadow-lg">
                     <Sparkles className="w-6 h-6 text-primary animate-pulse" />
                     <div className="text-center">
-                      <p className="text-xs text-muted-foreground font-medium tracking-wide">Genie Credits</p>
+                      <p className="text-sm text-muted-foreground font-bold tracking-wide">Genie Credits Left</p>
                       <p className="text-3xl font-bold text-primary tabular-nums leading-tight">
-                        {user.credits}
-                      </p>
+      {creditsLeft !== null ? creditsLeft : "--"}
+    </p>
                     </div>
                   </div>
                 </div>
@@ -389,7 +418,7 @@ export default function UserPage() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Credits Used</p>
-                  <p className="text-sm font-semibold text-foreground">20</p>
+                  <p className="text-sm font-semibold text-foreground">{user.creditsUsed}</p>
                 </div>
               </div>
             </div>
@@ -453,10 +482,10 @@ export default function UserPage() {
                   Upgrade to <span className="text-primary font-semibold">Pro</span> to unlock
                   unlimited AI generations and get more credits every month.
                 </p>
-                <button className="w-full flex items-center justify-center gap-2 py-3.5 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-2xl transition-all duration-200 shadow-sm cursor-pointer">
+                <Link href="/dashboard/upgrade" className="w-full flex items-center justify-center gap-2 py-3.5 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-2xl transition-all duration-200 shadow-sm cursor-pointer">
                   <Zap className="w-4 h-4" />
                   Upgrade to Pro
-                </button>
+                </Link>
               </>
             )}
 
