@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Sparkles, Check, Zap, Lock } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
-type PlanType = "free" | "genie" | "genie_plus";
+type PlanType = "free" | "genie" | "geniepro";
 
 interface PlanDetails {
   name: string;
@@ -17,7 +18,13 @@ interface PlanDetails {
 }
 
 export default function UpgradePage() {
-  const [currentPlan, setCurrentPlan] = useState<PlanType>("free");
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const currentPlan: PlanType =
+    user?.plan === "genie" || user?.plan === "geniepro" || user?.plan === "free"
+      ? user.plan
+      : "free";
 
   const plans: Record<PlanType, PlanDetails> = {
     free: {
@@ -56,7 +63,7 @@ export default function UpgradePage() {
       color: "text-purple-400",
       icon: <Sparkles className="w-6 h-6" />,
     },
-    genie_plus: {
+    geniepro: {
       name: "Genie Plus",
       credits: 2000,
       duration: "6 months",
@@ -77,7 +84,9 @@ export default function UpgradePage() {
   };
 
   const handleSelectPlan = (planKey: PlanType) => {
-    setCurrentPlan(planKey);
+    if (plans[planKey].price !== null) {
+      router.push(`/dashboard/payment?plan=${planKey}`);
+    }
   };
 
   return (

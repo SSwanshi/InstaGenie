@@ -270,11 +270,18 @@ export default function UserPage() {
 
   if (!user) return null;
 
-  const joinDate = new Date(user.createdAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const safePlanExpiryDays = user.isPremium ? Math.max(0, user.planExpiryDays ?? 0) : 0;
+  const planExpiryDateLabel = user.isPremium
+    ? (() => {
+        const planExpiryDate = new Date();
+        planExpiryDate.setDate(planExpiryDate.getDate() + safePlanExpiryDays);
+        return planExpiryDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      })()
+    : "Not Active";
 
   const fullName = user.name || "User";
 
@@ -402,13 +409,18 @@ export default function UserPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-4 bg-muted/40 rounded-2xl border border-border">
+              <div className="relative flex items-center gap-3 p-4 bg-muted/40 rounded-2xl border border-border overflow-hidden">
+                {user.isPremium && (
+                  <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-2.5 py-0.5 rounded-bl-xl text-[10px] font-bold uppercase tracking-wide whitespace-nowrap">
+                    {safePlanExpiryDays} Days Left
+                  </div>
+                )}
                 <div className="p-2 bg-primary/10 rounded-xl">
                   <Calendar className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Joined</p>
-                  <p className="text-sm font-semibold text-foreground">{joinDate}</p>
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Plan Expiry Date</p>
+                  <p className="text-sm font-semibold text-foreground">{planExpiryDateLabel}</p>
                 </div>
               </div>
 

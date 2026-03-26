@@ -53,6 +53,8 @@ export async function registerUser(req: Request) {
       email,
       password: hashed,
       name,
+      planExpiryDays: 60,
+      planLastUpdatedAt: new Date(),
 
       storyService: {
         captionGenerated: 0,

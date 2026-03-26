@@ -29,6 +29,7 @@ export interface IUser extends Document {
   isPremium: boolean;
   plan: PlanType;
   planExpiryDays: number;
+  planLastUpdatedAt: Date;
   avatar: string;
 
   storyService: IStoryService;
@@ -52,7 +53,8 @@ const UserSchema = new Schema<IUser>(
       enum: ["free", "genie", "geniepro"],
       default: "free",
     },
-    planExpiryDays: { type: Number, default: 0 },
+    planExpiryDays: { type: Number, default: 60 },
+    planLastUpdatedAt: { type: Date, default: Date.now },
     avatar: { type: String, default: "initials" },
 
     storyService: {
