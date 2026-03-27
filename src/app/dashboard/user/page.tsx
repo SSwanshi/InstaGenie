@@ -270,18 +270,20 @@ export default function UserPage() {
 
   if (!user) return null;
 
-  const safePlanExpiryDays = user.isPremium ? Math.max(0, user.planExpiryDays ?? 0) : 0;
-  const planExpiryDateLabel = user.isPremium
-    ? (() => {
-        const planExpiryDate = new Date();
-        planExpiryDate.setDate(planExpiryDate.getDate() + safePlanExpiryDays);
-        return planExpiryDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-      })()
-    : "Not Active";
+  const safePlanExpiryDays = Math.max(0, user.planExpiryDays ?? 0);
+  const planExpiryDateLabel = (() => {
+    const date = user.planExpiryDate ? new Date(user.planExpiryDate) : null;
+
+    if (!date || Number.isNaN(date.getTime())) {
+      return "Not Available";
+    }
+
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  })();
 
   const fullName = user.name || "User";
 
@@ -410,7 +412,7 @@ export default function UserPage() {
               </div>
 
               <div className="relative flex items-center gap-3 p-4 bg-muted/40 rounded-2xl border border-border overflow-hidden">
-                {user.isPremium && (
+                {safePlanExpiryDays > 0 && (
                   <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-2.5 py-0.5 rounded-bl-xl text-[10px] font-bold uppercase tracking-wide whitespace-nowrap">
                     {safePlanExpiryDays} Days Left
                   </div>

@@ -1,0 +1,5 @@
+2. Redis and Bull MQ
+3. Razorpay integration
+4. Webhooks
+5. Error pages and handling 
+6. Containarization

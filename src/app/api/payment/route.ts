@@ -20,25 +20,30 @@ export async function POST(req: NextRequest) {
 
 		await connectDB();
 
-		const updatedUser = await User.findByIdAndUpdate(
-			authUser.userId,
-			{
-				$set: {
-					isPremium: true,
-					plan: selectedPlan.dbPlan,
-					planLastUpdatedAt: new Date(),
-				},
-				$inc: {
-					planExpiryDays: selectedPlan.planDays,
-					credits: selectedPlan.credits,
-				},
-			},
-			{ new: true }
-		).select("-password");
+		const user = await User.findById(authUser.userId);
 
-		if (!updatedUser) {
+		if (!user) {
 			return NextResponse.json({ error: "User not found" }, { status: 404 });
 		}
+
+		const now = new Date();
+		const paidPlanDurationDays = 180;
+		const previousPlanExpiryDays = Math.max(0, user.planExpiryDays ?? 0);
+		const shouldOverwriteExpiry = user.plan === "free" || !user.isPremium;
+		const nextPlanExpiryDays = shouldOverwriteExpiry
+			? paidPlanDurationDays
+			: previousPlanExpiryDays + selectedPlan.planDays;
+		const nextPlanExpiryDate = new Date(now);
+		nextPlanExpiryDate.setUTCDate(nextPlanExpiryDate.getUTCDate() + nextPlanExpiryDays);
+
+		user.isPremium = true;
+		user.plan = selectedPlan.dbPlan;
+		user.planExpiryDays = nextPlanExpiryDays;
+		user.planExpiryDate = nextPlanExpiryDate;
+		user.planLastUpdatedAt = now;
+		user.credits = (user.credits ?? 0) + selectedPlan.credits;
+
+		const updatedUser = await user.save();
 
 		return NextResponse.json({
 			message: "Payment processed successfully",
@@ -46,7 +51,7 @@ export async function POST(req: NextRequest) {
 			appliedPlan: {
 				plan: selectedPlan.uiPlan,
 				creditsAdded: selectedPlan.credits,
-				daysAdded: selectedPlan.planDays,
+				daysAdded: shouldOverwriteExpiry ? paidPlanDurationDays : selectedPlan.planDays,
 			},
 		});
 	} catch (error) {

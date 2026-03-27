@@ -14,6 +14,12 @@ function getElapsedUtcDays(from: Date, to: Date): number {
   return Math.floor((startOfUtcDay(to) - startOfUtcDay(from)) / msPerDay);
 }
 
+function addUtcDays(date: Date, days: number): Date {
+  const result = new Date(startOfUtcDay(date));
+  result.setUTCDate(result.getUTCDate() + days);
+  return result;
+}
+
 export async function GET(req: NextRequest) {
   try {
     // Check for authToken in cookies
@@ -41,9 +47,38 @@ export async function GET(req: NextRequest) {
     const lastUpdatedAt = userData.planLastUpdatedAt ?? userData.createdAt ?? now;
     const elapsedDays = getElapsedUtcDays(new Date(lastUpdatedAt), now);
 
-    if (userData.isPremium && elapsedDays > 0) {
+    let shouldSave = false;
+
+    if (elapsedDays > 0) {
       userData.planExpiryDays = Math.max(0, (userData.planExpiryDays ?? 0) - elapsedDays);
       userData.planLastUpdatedAt = now;
+      shouldSave = true;
+    }
+
+    const normalizedPlanExpiryDays = Math.max(0, userData.planExpiryDays ?? 0);
+    const normalizedPlanExpiryDate = addUtcDays(now, normalizedPlanExpiryDays);
+
+    if (
+      !userData.planExpiryDate ||
+      startOfUtcDay(new Date(userData.planExpiryDate)) !== startOfUtcDay(normalizedPlanExpiryDate)
+    ) {
+      userData.planExpiryDate = normalizedPlanExpiryDate;
+      shouldSave = true;
+    }
+
+    // Auto-refresh when expiry days reach 0 (applies to all users - free indefinitely, premium downgrades to free)
+    if (normalizedPlanExpiryDays === 0) {
+      userData.plan = "free";
+      userData.isPremium = false;
+      userData.credits = 100;
+      userData.planExpiryDays = 60;
+      const freshTrialExpiryDate = addUtcDays(now, 60);
+      userData.planExpiryDate = freshTrialExpiryDate;
+      userData.planLastUpdatedAt = now;
+      shouldSave = true;
+    }
+
+    if (shouldSave) {
       await userData.save();
     }
 

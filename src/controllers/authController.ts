@@ -14,6 +14,7 @@ function getSafeUser(user: HydratedDocument<IUser>) {
     plan: user.plan,
     isPremium: user.isPremium,
     planExpiryDays: user.planExpiryDays,
+    planExpiryDate: user.planExpiryDate,
     avatar: user.avatar,
 
     storyService: user.storyService,
@@ -49,12 +50,17 @@ export async function registerUser(req: Request) {
 
     const hashed = await hashPassword(password);
 
+    const planStartDate = new Date();
+    const planExpiryDate = new Date(planStartDate);
+    planExpiryDate.setUTCDate(planExpiryDate.getUTCDate() + 60);
+
     const user = await User.create({
       email,
       password: hashed,
       name,
       planExpiryDays: 60,
-      planLastUpdatedAt: new Date(),
+      planExpiryDate,
+      planLastUpdatedAt: planStartDate,
 
       storyService: {
         captionGenerated: 0,

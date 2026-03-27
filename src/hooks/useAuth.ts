@@ -30,6 +30,7 @@ export interface User {
   isPremium: boolean;
   plan: PlanType;
   planExpiryDays: number;
+  planExpiryDate: string;
   avatar: string;
 
   storyService: StoryService;
