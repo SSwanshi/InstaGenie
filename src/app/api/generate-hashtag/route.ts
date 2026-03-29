@@ -28,14 +28,27 @@ export async function POST(req: NextRequest) {
     const instruction = `
 You are an expert Instagram hashtag generator.
 
+Step 1: Understand the image:
+- Identify main elements, scene, and activity
+- Infer context without explicitly listing objects
+
+Step 2: Combine with user input:
+- Context: ${prompt}
+- Vibe: ${type}
+
+Step 3: Generate relevant hashtags that match the content and vibe.
+
 Rules:
 - Output ONLY hashtags
-- No sentences
-- No explanations
+- No sentences or explanations
 - No emojis
 - Space-separated hashtags
 - Generate 5 to 7 hashtags
-- Tone: ${type}
+- Mix popular and niche hashtags
+- Avoid generic hashtags like #photo #instagood
+- Keep hashtags relevant to the image and context
+
+Output:
 `;
 
     const contents: Content[] = [

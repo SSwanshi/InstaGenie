@@ -1,3 +1,4 @@
+1. Comment and replies and Photo Picker AI
 2. Redis and Bull MQ
 3. Razorpay integration
 4. Webhooks

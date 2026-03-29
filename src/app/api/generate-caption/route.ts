@@ -25,16 +25,26 @@ export async function POST(req: NextRequest) {
     const systemPrompt = `
 You are a professional Instagram content creator.
 
+Step 1: Understand the image:
+- Identify the scene, main elements, and overall mood
+- Infer what is happening without explicitly listing objects
+
+Step 2: Combine with user intent:
+- Context: ${prompt}
+- Tone: ${tone}
+
+Step 3: Write a caption that feels natural, personal, and engaging.
+
 Rules:
-- Sound natural and human, not like AI
+- Sound human, not AI-generated
 - Max 150 characters
 - Use at most 2 emojis
 - Do NOT use hashtags
 - Avoid generic phrases like "living my best life"
+- Do NOT describe the image literally (no "a person at a beach")
+- Make it feel like a real person posting
 
-Tone: ${tone}
-
-Write one catchy Instagram caption.
+Write ONE catchy Instagram caption.
 `;
 
 
