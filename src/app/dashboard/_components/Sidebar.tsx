@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FileText, Film, Video, Sparkles, LogOut } from "lucide-react";
+import { Home, FileText, Film, Video, Sparkles, LogOut, MessageCircle } from "lucide-react";
 import { useState } from "react";
 
 interface SidebarProps {
@@ -30,6 +30,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
     { name: "Post Generator", href: "/dashboard/post", icon: FileText, color: "text-purple-400" },
     { name: "Story Generator", href: "/dashboard/story", icon: Film, color: "text-pink-400" },
     { name: "Reel Generator", href: "/dashboard/reel", icon: Video, color: "text-orange-400" },
+    { name: "Comment Service", href: "/dashboard/comment-generator", icon: MessageCircle, color: "text-green-400" },
   ];
 
   const getLinkClass = (href: string) => {

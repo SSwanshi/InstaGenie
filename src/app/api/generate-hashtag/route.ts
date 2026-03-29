@@ -34,9 +34,7 @@ Step 1: Understand the image:
 
 Step 2: Combine with user input:
 - Context: ${prompt}
-- Vibe: ${type}
-
-Step 3: Generate relevant hashtags that match the content and vibe.
+- Vibe: ${type}Step 3: Generate relevant hashtags that match the content and vibe.
 
 Rules:
 - Output ONLY hashtags
