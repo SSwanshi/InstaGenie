@@ -24,6 +24,8 @@ export async function POST(req: Request) {
         "descriptionGenerated",
         "topicSuggested",
       ],
+      comments: ["commentGenerated"],
+      photoPicker: ["photoPicked"],
     };
 
     if (!validFields[type]) {
@@ -55,6 +57,12 @@ export async function POST(req: Request) {
     }
     else if(field === "hashtagGenerated" && type === "post"){
         update = { $inc: { creditsUsed: 5 } };
+    }
+    else if(field === "commentGenerated" && type === "comments"){
+        update = { $inc: { creditsUsed: 5 } };
+    }
+    else if(field === "photoPicked" && type === "photoPicker"){
+        update = { $inc: { creditsUsed: 10 } };
     }
 
     const updatedUser = await User.findByIdAndUpdate(user.userId, update, {

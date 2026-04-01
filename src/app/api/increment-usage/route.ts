@@ -24,6 +24,8 @@ export async function POST(req: Request) {
         "descriptionGenerated",
         "topicSuggested",
       ],
+      comments: ["commentGenerated"],
+      photoPicker: ["photoPicked"],
     };
 
     if (!validFields[type]) {

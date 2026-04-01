@@ -22,6 +22,14 @@ interface ReelService {
   topicSuggested: number;
 }
 
+interface CommentsService {
+  commentGenerated: number;
+}
+
+interface PhotoPickerService {
+  photoPicked: number;
+}
+
 export interface User {
   _id: string;
   name: string;
@@ -36,6 +44,8 @@ export interface User {
   storyService: StoryService;
   postService: PostService;
   reelService: ReelService;
+  commentsService: CommentsService;
+  photoPickerService: PhotoPickerService;
 
   creditsUsed: number;
 

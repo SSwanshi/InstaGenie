@@ -52,6 +52,50 @@ export default function CommentServicePage() {
     }
   };
 
+  const handleIncrement = async () => {
+    try {
+      const res = await fetch("/api/increment-usage", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "comments",
+          field: "commentGenerated"
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        console.log(`Count incremented to: ${data}`);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  };
+
+  const handleCredits = async () => {
+    try {
+      const res = await fetch("/api/credits-used", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "comments",
+          field: "commentGenerated"
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        console.log(`Credits used till now: ${data}`);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  };
+
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
@@ -89,6 +133,8 @@ export default function CommentServicePage() {
               .map((comment: string) => comment.trim())
               .filter((comment: string) => comment.length > 0);
             setResults(commentsList);
+            handleIncrement();
+            handleCredits();
           } else {
             alert(data.error || "Failed to generate comments");
           }
@@ -124,6 +170,8 @@ export default function CommentServicePage() {
             .map((reply: string) => reply.trim())
             .filter((reply: string) => reply.length > 0);
           setResults(repliesList);
+          handleIncrement();
+          handleCredits();
         } else {
           alert(data.error || "Failed to generate reply");
         }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FileText, Film, Video, Sparkles, LogOut, MessageCircle } from "lucide-react";
+import { Home, FileText, Film, Video, Sparkles, LogOut, MessageCircle, Image as ImageIcon } from "lucide-react";
 import { useState } from "react";
 
 interface SidebarProps {
@@ -31,6 +31,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
     { name: "Story Generator", href: "/dashboard/story", icon: Film, color: "text-pink-400" },
     { name: "Reel Generator", href: "/dashboard/reel", icon: Video, color: "text-orange-400" },
     { name: "Comment Service", href: "/dashboard/comment-generator", icon: MessageCircle, color: "text-green-400" },
+    { name: "Photo Picker", href: "/dashboard/photo-picker", icon: ImageIcon, color: "text-indigo-400" },
   ];
 
   const getLinkClass = (href: string) => {
@@ -61,7 +62,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
             <span className="text-[10px] font-bold uppercase tracking-[2px] text-primary/60">Main Menu</span>
           </div>
 
-          <nav className="space-y-2 flex-1">
+          <nav className="space-y-0 flex-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -122,7 +123,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
             <p className="text-muted-foreground text-[10px] mt-2 uppercase tracking-[4px] font-bold">Navigation</p>
           </div>
 
-          <nav className="space-y-2 flex-1">
+          <nav className="space-y-1 flex-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;

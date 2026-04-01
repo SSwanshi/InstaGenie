@@ -30,7 +30,7 @@ const stylesMap = {
   robots: bottts,
 } as const;
 
-type ServiceKey = "post" | "story" | "reel";
+type ServiceKey = "post" | "story" | "reel" | "comments" | "photoPicker";
 
 interface ServiceDialogProps {
   service: ServiceKey;
@@ -78,6 +78,28 @@ const serviceConfig = {
       { key: "hashtagGenerated", label: "Hashtags Generated", icon: Hash },
       { key: "descriptionGenerated", label: "Descriptions Generated", icon: AlignLeft },
       { key: "topicSuggested", label: "Topics Suggested", icon: Lightbulb },
+    ],
+  },
+  comments: {
+    title: "Comments Service",
+    icon: MessageSquare,
+    color: "text-pink-400",
+    bg: "bg-pink-500/10",
+    border: "border-pink-500/20",
+    accent: "bg-pink-500",
+    fields: [
+      { key: "commentGenerated", label: "Comments Generated", icon: MessageSquare },
+    ],
+  },
+  photoPicker: {
+    title: "Photo Picker",
+    icon: Camera,
+    color: "text-indigo-400",
+    bg: "bg-indigo-500/10",
+    border: "border-indigo-500/20",
+    accent: "bg-indigo-500",
+    fields: [
+      { key: "photoPicked", label: "Photos Picked", icon: Sparkles },
     ],
   },
 };
@@ -311,6 +333,22 @@ export default function UserPage() {
       color: "text-orange-400",
       bg: "bg-orange-500/10",
       border: "border-orange-500/20",
+    },
+    {
+      key: "comments",
+      label: "Comments Service",
+      icon: MessageSquare,
+      color: "text-pink-400",
+      bg: "bg-pink-500/10",
+      border: "border-pink-500/20",
+    },
+    {
+      key: "photoPicker",
+      label: "Photo Picker",
+      icon: Camera,
+      color: "text-indigo-400",
+      bg: "bg-indigo-500/10",
+      border: "border-indigo-500/20",
     },
   ];
 

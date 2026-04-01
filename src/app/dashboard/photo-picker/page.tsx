@@ -85,8 +85,8 @@ export default function PhotoPickerPage() {
       const res = await fetch("/api/increment-usage", {
         method: "POST",
         body: JSON.stringify({
-          type: "post",
-          field: "hashtagGenerated", // Or similar usage field if photo picker uses specific one, keeping similar to hashtag for now or change to photoPickerUsage based on model
+          type: "photoPicker",
+          field: "photoPicked",
         }),
         headers: {
           "Content-Type": "application/json",
@@ -107,8 +107,8 @@ export default function PhotoPickerPage() {
       const res = await fetch("/api/credits-used", {
         method: "POST",
         body: JSON.stringify({
-          type: "post",
-          field: "hashtagGenerated", // Keeping consistent but recommend updating to mapped field for photo picker
+          type: "photoPicker",
+          field: "photoPicked",
         }),
         headers: {
           "Content-Type": "application/json",

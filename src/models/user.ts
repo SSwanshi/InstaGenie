@@ -21,6 +21,14 @@ interface IReelService extends IServiceCount {
   topicSuggested: number;
 }
 
+interface ICommentsService {
+  commentGenerated: number;
+}
+
+interface IPhotoPickerService {
+  photoPicked: number;
+}
+
 export interface IUser extends Document {
   email: string;
   password: string;
@@ -36,6 +44,8 @@ export interface IUser extends Document {
   storyService: IStoryService;
   postService: IPostService;
   reelService: IReelService;
+  commentsService: ICommentsService;
+  photoPickerService: IPhotoPickerService;
   creditsUsed: number;
 
   createdAt: Date;
@@ -94,6 +104,21 @@ const UserSchema = new Schema<IUser>(
       },
       default: { captionGenerated: 0, musicSuggested: 0, hashtagGenerated: 0, descriptionGenerated: 0, topicSuggested: 0 },
     },
+
+    commentsService: {
+      type: {
+        commentGenerated: { type: Number, default: 0 },
+      },
+      default: { commentGenerated: 0 },
+    },
+
+    photoPickerService: {
+      type: {
+        photoPicked: { type: Number, default: 0 },
+      },
+      default: { photoPicked: 0 },
+    },
+
     creditsUsed: {type: Number, default: 0},
   },
   { timestamps: true }
