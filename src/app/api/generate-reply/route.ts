@@ -8,11 +8,11 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: NextRequest) {
   try {
-    const { prompt, tone, image } = await req.json();
+    const { prompt, tone, context } = await req.json();
 
-    if (!image) {
+    if (!prompt) {
       return NextResponse.json(
-        { error: "Image is required." },
+        { error: "Comment to reply to is required." },
         { status: 400 }
       );
     }
@@ -29,31 +29,29 @@ export async function POST(req: NextRequest) {
     });
 
     const systemPrompt = `
-You are an expert at writing natural, human-like Instagram replies to posts or stories.
+You are an expert at writing natural, human-like replies to comments on social media.
 
-Step 1: Understand the image:
-- Identify what the post/story is about
-- Infer the mood, situation, and key elements
-
-Step 2: Consider user input:
+Step 1: Understand the input:
+- Comment to reply: ${prompt}
+- Context (if any): ${context || "none"}
 - Tone: ${tone}
-- Context (if any): ${prompt || "none"}
 
-Step 3: Generate multiple reply options that feel real and appropriate.
+Step 2: Generate replies that feel natural and conversational.
 
 Guidelines:
 - Sound like a real person, not AI
-- Keep each reply short and natural (1–2 lines max)
+- Keep replies short and natural (1–2 lines max)
 - Match the selected tone strongly
 - If context is provided, continue the conversation naturally
-- Do NOT describe the image literally
-- Avoid generic replies like "nice pic" or "awesome"
-- Make replies engaging and varied (no repetition)
+- Do NOT repeat the original comment
+- Avoid generic replies like "thanks" or "lol"
+- Make replies engaging, relevant, and varied
 - Use slightly casual, imperfect language when suitable
 
 Tone-specific behavior:
+- Friendly / Casual → relaxed and natural
 - Funny / Playful → light humor
-- Flirty → subtle and not cringe
+- Flirty → subtle and smooth (not cringe)
 - Roast → witty, sarcastic but not offensive
 - Polite / Professional → respectful and clean
 - Supportive / Encouraging → positive and uplifting
@@ -64,21 +62,17 @@ Output:
 - No numbering, no bullets, no explanations
 `;
 
+    const textContent = context
+      ? `${systemPrompt}\nComment: ${prompt}\nContext: ${context}\nTone: ${tone}`
+      : `${systemPrompt}\nComment: ${prompt}\nTone: ${tone}`;
+
     const contents: Content[] = [];
 
     contents.push({
       role: "user",
       parts: [
         {
-          inlineData: {
-            mimeType: "image/jpeg",
-            data: image,
-          },
-        },
-        {
-          text: prompt
-            ? `${systemPrompt}\nContext: ${prompt}\nTone: ${tone}`
-            : `${systemPrompt}\nTone: ${tone}`,
+          text: textContent,
         },
       ],
     });
@@ -91,14 +85,14 @@ Output:
       },
     });
 
-    const comments =
-      result.response.text()?.trim() || "No comments generated.";
+    const reply =
+      result.response.text()?.trim() || "No reply generated.";
 
-    return NextResponse.json({ comments });
+    return NextResponse.json({ reply });
   } catch (error) {
-    console.error("Error generating comments:", error);
+    console.error("Error generating reply:", error);
     return NextResponse.json(
-      { error: "Failed to generate comments." },
+      { error: "Failed to generate reply." },
       { status: 500 }
     );
   }

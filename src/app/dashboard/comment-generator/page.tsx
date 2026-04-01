@@ -25,6 +25,7 @@ export default function CommentServicePage() {
   // States for Comment on Post/Story
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [commentContext, setCommentContext] = useState("");
   const [commentTone, setCommentTone] = useState("Friendly");
 
   // States for Reply to Comment
@@ -53,15 +54,86 @@ export default function CommentServicePage() {
 
   const handleGenerate = async () => {
     setIsGenerating(true);
-    // Simulate generation delay
-    setTimeout(() => {
-      // Dummy response as per prompt requirements (API always sends 2 responses)
-      setResults([
-        "Oh wow! This is amazing 🔥 Keep up the great work!",
-        "Absolutely love this! The details are just perfect ✨"
-      ]);
+    try {
+      if (activeService === "comment") {
+        // For comment service
+        if (!imageFile) {
+          alert("Please upload an image");
+          setIsGenerating(false);
+          return;
+        }
+
+        // Convert image to base64
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const base64Image = (reader.result as string).split(",")[1];
+          
+          const response = await fetch("/api/generate-comments", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              image: base64Image,
+              tone: commentTone,
+              prompt: commentContext,
+            }),
+          });
+
+          const data = await response.json();
+          
+          if (response.ok) {
+            // Split comments by newlines or filter empty lines
+            const commentsList = data.comments
+              .split("\n")
+              .map((comment: string) => comment.trim())
+              .filter((comment: string) => comment.length > 0);
+            setResults(commentsList);
+          } else {
+            alert(data.error || "Failed to generate comments");
+          }
+          setIsGenerating(false);
+        };
+        
+        reader.onerror = () => {
+          alert("Error reading image");
+          setIsGenerating(false);
+        };
+        
+        reader.readAsDataURL(imageFile);
+      } else if (activeService === "reply") {
+        // For reply service
+        const response = await fetch("/api/generate-reply", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: commentText,
+            tone: replyTone,
+            context: contextText,
+          }),
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Split replies by newlines or filter empty lines
+          const repliesList = data.reply
+            .split("\n")
+            .map((reply: string) => reply.trim())
+            .filter((reply: string) => reply.length > 0);
+          setResults(repliesList);
+        } else {
+          alert(data.error || "Failed to generate reply");
+        }
+        setIsGenerating(false);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred");
       setIsGenerating(false);
-    }, 2000);
+    }
   };
 
   // Selector View
@@ -191,6 +263,18 @@ export default function CommentServicePage() {
                       <p className="text-xs text-muted-foreground">PNG, JPG, GIF up to 5MB</p>
                     </div>
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                    <AlignLeft className="w-4 h-4 text-primary" /> Context (Optional)
+                  </label>
+                  <textarea
+                    value={commentContext}
+                    onChange={(e) => setCommentContext(e.target.value)}
+                    className="w-full bg-muted/50 border border-border rounded-xl p-4 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all placeholder:text-muted-foreground resize-none h-24"
+                    placeholder="Any additional context about the post?"
+                  />
                 </div>
 
                 <div>
