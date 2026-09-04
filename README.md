@@ -1,10 +1,6 @@
 # ✨ InstaGenie — Let AI Handle The Aesthetic
 
 <p align="center">
-  <img src="./public/social_image.jpg" alt="InstaGenie Banner" width="100%" style="border-radius: 12px; max-height: 400px; object-fit: cover;" />
-</p>
-
-<p align="center">
   <strong>The all-in-one AI creative studio built for modern Instagram creators, influencers, and digital brands.</strong>
 </p>
 
